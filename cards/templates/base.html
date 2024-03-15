@@ -29,13 +29,23 @@
                     <a class="nav-link" href="{% url 'index' %}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">All Books</a>
+                    <a class="nav-link" href="{% url 'card_list' %}">All Cards</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">All Authors</a>
                 </li>
 
             </ul>
+    <ul class="nav navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+            <li><a class="nav-link" href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-in"></span>Logout</a>
+            </li>
+
+        {% else %}
+            <li><a class="nav-link" href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a>
+            </li>
+        {% endif %}
+    </ul>
 
         </div>
     </div>
