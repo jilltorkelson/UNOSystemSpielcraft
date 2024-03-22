@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Card Stats</h1>
+
+<table class="table">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Value</th>
+      <th scope="col">Tot Quantity</th>
+      <th scope="col">Avg User Quant</th>
+      <th scope="col"># Trade Requests</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1st Class Rat</th>
+      <td>100</td>
+      <td>900</td>
+      <td>10</td>
+      <td>78</td>
+    </tr>
+    <tr>
+      <th scope="row">Captain Django</th>
+      <td>500</td>
+      <td>345</td>
+      <td>3</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th scope="row">Sergeant Psycho</th>
+      <td>172</td>
+      <td>86</td>
+      <td>.7</td>
+      <td>92</td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

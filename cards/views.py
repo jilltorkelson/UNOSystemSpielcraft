@@ -25,5 +25,20 @@ class CardListView(LoginRequiredMixin, generic.ListView):
     model = Card
 
 
+class CardStatsView(LoginRequiredMixin, generic.ListView):
+    model = Card
+    template_name = 'cards/card_stats.html'
+
+
 class CardDetailView(LoginRequiredMixin, generic.DetailView):
     model = Card
+
+
+class CardsByPlayerListView(LoginRequiredMixin, generic.ListView):
+    model = UserCard
+    template_name = 'cards/my_cards.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return UserCard.objects.filter \
+            (player=self.request.user).order_by('card_id')

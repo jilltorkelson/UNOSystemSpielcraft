@@ -8,48 +8,72 @@
     <title>{% block title %}SpielCraft Games{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'cards/css/style.css' %}">
 
 </head>
-<body>
-    <header class="bg-primary text-white text-center py-3">
-        <h1>Spielcraft Games</h1>
-        <p>User-friendly games for all ages</p>
-    </header>
 
+<body>
+<header>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'index' %}">Spielcraft</a>
+        <a class="navbar-logo" href="{% url 'index' %}">
+            <img src="{% static 'images/circlered26.jpg' %}" alt="home"/> Death of Reply</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse " id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    <a class="nav-link" href="{% url 'card_list' %}">Card Sets</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'my_cards' %}">My Cards</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Decks</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'card_list' %}">All Cards</a>
+                    <a class="nav-link" href="#">Learn the Game</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">All Authors</a>
+                    <a class="nav-link" href="#">News</a>
                 </li>
+            {% if user.is_superuser %}
+                            <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Maintenance
+            </a>
+
+            <ul class="dropdown-menu">
+                <li><a class="nav-item-employee" href="#">Trade Report</a></li>
+                <li><a class="nav-item-employee" href="{% url 'card_list' %}">All Cards</a></li>
+                <li><a class="nav-item-employee" href="{% url 'card_stats' %}">Card Stats</a></li>
+                <li><a class="nav-item-employee" href="#">Alter Trades</a></li>
+                <li><a class="nav-item-employee" href="#">New Player</a></li>
+                <li><a class="nav-item-employee" href="#">Assign Cards</a></li>
+                <li><a class="nav-item-employee" href="#">Alter Trades</a></li>
 
             </ul>
-    <ul class="nav navbar-nav ml-auto">
+        </li>
+    {% endif %}
+            </ul>
+    <ul class="nav-account navbar-nav ml-auto">
         {% if user.is_authenticated %}
-            <li><a class="nav-link" href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-in"></span>Logout</a>
+            <li><a class="nav-account" href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-in"></span>Logout</a>
             </li>
 
         {% else %}
-            <li><a class="nav-link" href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a>
+            <li><a class="nav-account" href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a>
             </li>
         {% endif %}
     </ul>
-
         </div>
     </div>
 </nav>
+</header>
 
 <div class="container">
     <br/>
@@ -61,4 +85,7 @@
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
 </body>
+<nav class="navbar navbar-light bg-light">
+  <a class="footer" href="#">Footer</a>
+</nav>
 </html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>My Cards</h1>
+
+    {% if my_cards %}
+    <ul>
+      <li>
+      {% for card in my_cards %}
+        <a href="{% url 'my_cards' card.UserCard.pk %}">{{ card.UserCard.card_id.card_title }}</a> ({{ card.UserCard.user_card_quantity }})
+      </li>
+      {% endfor %}
+    </ul>
+
+    {% else %}
+      <p>Get a starter Card Pack!</p>
+    {% endif %}
+{% endblock %}
+</html>

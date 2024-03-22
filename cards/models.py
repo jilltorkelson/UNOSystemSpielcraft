@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
 import uuid  # Required for unique ids
+from django.contrib.auth.models import User
+from datetime import date
 
 
 class Card(models.Model):
@@ -23,7 +25,7 @@ class UserCard(models.Model):
     user_card_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                           help_text='Unique ID for this card that belongs to user')
     user_card_quantity = models.PositiveIntegerField(null=False)
-#    user_id = models.ForeignKey('User', on_delete=models.RESTRICT, null=False)
+    player = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
     card_id = models.ForeignKey('Card', on_delete=models.RESTRICT, null=False)
 
     def __str__(self):
