@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+
     <div class="home">
-
-
+        <img src="{% static 'images/lonesoldier1.jpeg' %}" alt="Soldier" width="100%">
+        <div class="centered-logo">
+            <p>Spielcraft<br>Games<br>Presents</p>
+        </div>
     </div>
-
 {% endblock %}

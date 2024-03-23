@@ -15,19 +15,21 @@
   {% endif %}
 
   <form method="post" action="{% url 'login' %}">
+    <div class="login-form">
     {% csrf_token %}
-    <table>
-      <tr>
+    <table id="login-table">
+      <tr class="login-row">
         <td>{{ form.username.label_tag }}</td>
         <td>{{ form.username }}</td>
       </tr>
-      <tr>
+      <tr class="login-row">
         <td>{{ form.password.label_tag }}</td>
         <td>{{ form.password }}</td>
       </tr>
     </table>
-    <input type="submit" value="login">
+    <input id="login-button" type="submit" value="login">
     <input type="hidden" name="next" value="{{ next }}">
+    </div>
   </form>
 
 {% endblock %}
