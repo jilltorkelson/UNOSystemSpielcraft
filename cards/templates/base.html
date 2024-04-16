@@ -33,18 +33,18 @@
                     <a class="nav-link" href="{% url 'card_list' %}">Card Sets</a>
                 </li>
                 {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'my_cards' %}">My Cards</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_cards' %}">My Cards</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_decks' %}">Decks</a>
+                    </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Decks</a>
+                    <a class="nav-link" href="#">LEARN GAME</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Learn the Game</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">News</a>
+                    <a class="nav-link" href="#">NEWS</a>
                 </li>
             {% if user.is_superuser %}
                             <li class="nav-item dropdown">
@@ -53,14 +53,12 @@
             </a>
 
             <ul class="dropdown-menu">
-                <li><a class="nav-item-employee" href="#">Trade Report</a></li>
+                <li><a class="nav-item-employee" href="{% url 'reports_dashboard' %}">Reports</a></li>
                 <li><a class="nav-item-employee" href="{% url 'card_list' %}">All Cards</a></li>
                 <li><a class="nav-item-employee" href="{% url 'card_stats' %}">Card Stats</a></li>
-                <li><a class="nav-item-employee" href="#">Alter Trades</a></li>
-                <li><a class="nav-item-employee" href="#">New Player</a></li>
-                <li><a class="nav-item-employee" href="#">Assign Cards</a></li>
-                <li><a class="nav-item-employee" href="#">Alter Trades</a></li>
-
+                <li><a class="nav-item-employee" href="{% url 'trade_request_list' %}">View Trades</a></li>
+                <li><a class="nav-item-employee" href="{% url 'user_list' %}">Players</a></li>
+                <li><a class="nav-item-employee" href="{% url 'assign_cards' %}">Assign Cards</a></li>
             </ul>
         </li>
     {% endif %}

@@ -18,11 +18,19 @@ def index(request):
         'num_decks': num_decks,
         'num_visits': num_visits,
     }
+    # render the HTML template index.html
+    # with the data in the context variable
     return render(request, 'index.html', context=context)
+
+
+class AssignCardsListView(LoginRequiredMixin, generic.DetailView):
+    model = UserCard
+    template_name = 'cards/UserCards_AddEdit.html'
 
 
 class CardListView(LoginRequiredMixin, generic.ListView):
     model = Card
+    template_name = 'cards/card_list.html'
 
 
 class CardStatsView(LoginRequiredMixin, generic.ListView):
@@ -30,11 +38,23 @@ class CardStatsView(LoginRequiredMixin, generic.ListView):
     template_name = 'cards/card_stats.html'
 
 
-class CardDetailView(LoginRequiredMixin, generic.DetailView):
+class DecksDetailView(LoginRequiredMixin, generic.DetailView):
     model = Card
+    template_name = 'cards/deck_detail.html'
 
 
-class CardsByPlayerListView(LoginRequiredMixin, generic.ListView):
+class DecksListView(LoginRequiredMixin, generic.ListView):
+    model = Card
+    template_name = 'cards/deck_list.html'
+
+
+class MaintenanceMainListView(LoginRequiredMixin, generic.ListView):
+    model = UserCard
+    template_name = 'cards/maintenance_main.html'
+    paginate_by = 10
+
+
+class MyCardsListView(LoginRequiredMixin, generic.ListView):
     model = UserCard
     template_name = 'cards/my_cards.html'
     paginate_by = 10
@@ -42,3 +62,48 @@ class CardsByPlayerListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return UserCard.objects.filter \
             (player=self.request.user).order_by('card_id')
+
+
+class MyDecksListView(LoginRequiredMixin, generic.ListView):
+    model = UserCard
+    template_name = 'cards/my_decks.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return UserCard.objects.filter \
+            (player=self.request.user).order_by('card_id')
+
+
+class MyTradesListView(LoginRequiredMixin, generic.ListView):
+    model = UserCard
+    template_name = 'cards/my_trades.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return UserCard.objects.filter \
+            (player=self.request.user).order_by('card_id')
+
+
+class PlayerHomeListView(LoginRequiredMixin, generic.ListView):
+    model = Card
+    template_name = 'cards/player_home.html'
+
+
+class ReportsDashboardView(LoginRequiredMixin, generic.ListView):
+    model = Card
+    template_name = 'cards/reports_dashboard.html'
+
+
+class TradeConfirmationListView(LoginRequiredMixin, generic.ListView):
+    model = Card
+    template_name = 'cards/trade_confirmation.html'
+
+
+class TradeRequestListView(LoginRequiredMixin, generic.ListView):
+    model = Card
+    template_name = 'cards/trade_request_list.html'
+
+
+class UserListView(LoginRequiredMixin, generic.ListView):
+    model = UserCard
+    template_name = 'cards/user_list.html'

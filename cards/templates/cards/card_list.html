@@ -1,15 +1,22 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-  <h1>Card List</h1>
+  <h1>There are __ cards total</h1>
   {% if card_list %}
-  <ul>
+  <div class="list_all">
+  <table class="card_list">
+
     {% for card in card_list %}
-      <li>
-        <a href="{{ Card.get_absolute_url }}">{{ card.title }}</a> ({{card.description}})
-      </li>
+      <tr>
+        <td><a href="{{ card.get_absolute_url }}">{{ card.card_title }}</a></td>
+          <td>{{ card.card_description }}</td>
+          <td>{{ card.card_value }}</td>
+      </tr>
     {% endfor %}
-  </ul>
+
+  </table>
+      </div>
   {% else %}
     <p>There are no cards yet created.</p>
   {% endif %}
