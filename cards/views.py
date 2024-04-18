@@ -25,12 +25,12 @@ def index(request):
 
 class AssignCardsListView(LoginRequiredMixin, generic.DetailView):
     model = UserCard
-    template_name = 'cards/UserCards_AddEdit.html'
+    template_name = 'cards/add_edit_usercards.html'
 
 
 class CardListView(LoginRequiredMixin, generic.ListView):
     model = Card
-    template_name = 'cards/card_list.html'
+    template_name = 'cards/add_edit_cards.html'
 
 
 class CardStatsView(LoginRequiredMixin, generic.ListView):
@@ -45,12 +45,12 @@ class DecksDetailView(LoginRequiredMixin, generic.DetailView):
 
 class DecksListView(LoginRequiredMixin, generic.ListView):
     model = Card
-    template_name = 'cards/deck_list.html'
+    template_name = 'cards/add_edit_deck.html'
 
 
 class MaintenanceMainListView(LoginRequiredMixin, generic.ListView):
     model = UserCard
-    template_name = 'cards/maintenance_main.html'
+    template_name = 'cards/admin.html'
     paginate_by = 10
 
 
@@ -76,7 +76,7 @@ class MyDecksListView(LoginRequiredMixin, generic.ListView):
 
 class MyTradesListView(LoginRequiredMixin, generic.ListView):
     model = UserCard
-    template_name = 'cards/my_trades.html'
+    template_name = 'cards/create_edit_my_trades.html'
     paginate_by = 10
 
     def get_queryset(self):
@@ -86,7 +86,7 @@ class MyTradesListView(LoginRequiredMixin, generic.ListView):
 
 class PlayerHomeListView(LoginRequiredMixin, generic.ListView):
     model = Card
-    template_name = 'cards/player_home.html'
+    template_name = 'cards/user_home.html'
 
 
 class ReportsDashboardView(LoginRequiredMixin, generic.ListView):
@@ -106,4 +106,13 @@ class TradeRequestListView(LoginRequiredMixin, generic.ListView):
 
 class UserListView(LoginRequiredMixin, generic.ListView):
     model = UserCard
+<<<<<<< Updated upstream
     template_name = 'cards/user_list.html'
+=======
+    template_name = 'cards/add_edit_user.html'
+
+
+class CardDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Card
+    template_name = 'cards/edit_card.html'
+>>>>>>> Stashed changes

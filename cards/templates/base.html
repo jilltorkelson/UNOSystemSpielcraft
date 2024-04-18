@@ -30,14 +30,17 @@
         <div class="collapse navbar-collapse " id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'card_list' %}">Card Sets</a>
+                    <a class="nav-link" href="{% url 'add_edit_cards' %}">Add/Edit Cards</a>
                 </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'trade_request_list' %}">Trade Requests</a>
+                    </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'my_cards' %}">My Cards</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'my_decks' %}">Decks</a>
+                        <a class="nav-link" href="{% url 'my_decks' %}">My Decks</a>
                     </li>
                 {% endif %}
                 <li class="nav-item">
@@ -49,7 +52,7 @@
             {% if user.is_superuser %}
                             <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Maintenance
+                Admin
             </a>
 
             <ul class="dropdown-menu">
