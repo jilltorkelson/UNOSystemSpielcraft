@@ -40,7 +40,7 @@ class CardStatsView(LoginRequiredMixin, generic.ListView):
 
 class DecksDetailView(LoginRequiredMixin, generic.DetailView):
     model = Card
-    template_name = 'cards/deck_detail.html'
+    template_name = 'cards/deck_add_edit.html'
 
 
 class DecksListView(LoginRequiredMixin, generic.ListView):
@@ -107,3 +107,8 @@ class TradeRequestListView(LoginRequiredMixin, generic.ListView):
 class UserListView(LoginRequiredMixin, generic.ListView):
     model = UserCard
     template_name = 'cards/user_list.html'
+
+
+class CardDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Card
+    template_name = 'cards/card_detail.html'
