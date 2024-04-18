@@ -30,12 +30,17 @@ class AddEditCardView(LoginRequiredMixin, generic.ListView):
 
 class AddEditDeckView(LoginRequiredMixin, generic.ListView):
     model = Card
-    template_name = 'cards/add_edit_deck.html'
+    template_name = 'cards/add_edit_users.html'
 
 
 class AddEditUserCardView(LoginRequiredMixin, generic.DetailView):
     model = UserCard
     template_name = 'cards/add_edit_usercards.html'
+
+
+class AddEditUsersView(LoginRequiredMixin, generic.DetailView):
+    model = UserCard
+    template_name = 'cards/add_edit_users.html'
 
 
 class AdminMainView(LoginRequiredMixin, generic.ListView):
@@ -66,7 +71,7 @@ class EditCardView(LoginRequiredMixin, generic.DetailView):
 
 class EditDeckView(LoginRequiredMixin, generic.DetailView):
     model = Card
-    template_name = 'cards/edit_deck.html'
+    template_name = 'cards/add_edit_deck.html'
 
 
 class MyCardsListView(LoginRequiredMixin, generic.ListView):

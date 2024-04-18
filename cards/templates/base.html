@@ -30,11 +30,8 @@
         <div class="collapse navbar-collapse " id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'add_edit_cards' %}">Add/Edit Cards</a>
+                    <a class="nav-link" href="{% url 'card_list' %}">Card Repository</a>
                 </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'trade_request_list' %}">Trade Requests</a>
-                    </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'my_cards' %}">My Cards</a>
@@ -42,13 +39,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'my_decks' %}">My Decks</a>
                     </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#">LEARN GAME</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">NEWS</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'trade_request_list' %}">Trade Requests</a>
+                    </li>
             {% if user.is_superuser %}
                             <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -56,14 +49,17 @@
             </a>
 
             <ul class="dropdown-menu">
+
+                <li><a class="nav-item-employee" href="{% url 'add_edit_cards' %}">Add Edit Cards</a></li>
+                <li><a class="nav-item-employee" href="{% url 'add_edit_usercards' %}">Add Edit User Cards</a></li>
+                <li><a class="nav-item-employee" href="{% url 'add_edit_users' %}">Add Edit Users</a></li>
                 <li><a class="nav-item-employee" href="{% url 'reports_dashboard' %}">Reports</a></li>
-                <li><a class="nav-item-employee" href="{% url 'add_edit_cards' %}">Add Edit Cards</a></li>
                 <li><a class="nav-item-employee" href="{% url 'card_stats' %}">Card Stats</a></li>
-                <li><a class="nav-item-employee" href="{% url 'trade_request_list' %}">View Trades</a></li>
-                <li><a class="nav-item-employee" href="{% url 'add_edit_cards' %}">Add Edit Cards</a></li>
+
             </ul>
         </li>
-    {% endif %}
+        {% endif %}
+                {% endif %}
             </ul>
     <ul class="nav-account navbar-nav ml-auto">
         {% if user.is_authenticated %}
@@ -74,6 +70,7 @@
             <li><a class="nav-account" href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span>Login</a>
             </li>
         {% endif %}
+
     </ul>
         </div>
 </div>
