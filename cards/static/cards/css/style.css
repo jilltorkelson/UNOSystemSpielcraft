@@ -137,8 +137,16 @@ h1 {
     padding: 10px;
 }
 
-.card_list {
+.all_list {
     color: yellowgreen;
     background-color: royalblue;
+
+}
+
+.card_list {
+
+}
+
+.deck_list {
 
 }
