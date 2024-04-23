@@ -33,7 +33,7 @@ class UserCard(models.Model):
     user_card_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                                     help_text='Unique ID for this card that belongs to user')
     user_card_quantity = models.PositiveIntegerField(null=False)
-    player = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
+    player = models.ForeignKey(User, on_delete=models.RESTRICT, null=False, blank=False)
     card_id = models.ForeignKey('Card', on_delete=models.RESTRICT, null=True)
 
     def __str__(self):
@@ -46,7 +46,7 @@ class Decks(models.Model):
     decks_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                                 help_text='Unique ID for this Deck')
     decks_title = models.CharField(max_length=30, null=True)
-    player = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
+    player = models.ForeignKey(User, on_delete=models.RESTRICT, null=False, blank=False)
 
     def __str__(self):
         """String representation of the Model object"""

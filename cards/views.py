@@ -34,13 +34,14 @@ class CardDetailView(LoginRequiredMixin, generic.DetailView):
 
 
 class MyCardsListView(LoginRequiredMixin, generic.ListView):
+    """generic class-based view list cards owned by logged in user"""
     model = UserCard
     template_name = 'cards/my_cards.html'
     paginate_by = 10
 
     def get_queryset(self):
         return UserCard.objects.filter \
-            (player=self.request.user).order_by('card_id')
+            (player=self.request.user)
 
 
 class MyDecksListView(LoginRequiredMixin, generic.ListView):

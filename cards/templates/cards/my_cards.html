@@ -2,9 +2,11 @@
 {% load static %}
     # HERE reference name of module from structure chart
 {% block content %}
-    my_cards
-  <h1>I currently own __ cards total</h1>  #placeholder for total # of cards in query
+
+
   {% if my_cards %}
+  <h1>I currently own __ cards total</h1>  #placeholder for total # of cards in query
+
   <div class="list_all">
   <table class="card_list">
     {% for card in my_cards %}
