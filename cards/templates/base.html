@@ -40,7 +40,7 @@
                         <a class="nav-link" href="{% url 'my_decks' %}">My Decks</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'my_trade_requests' %}">Trade Requests</a>
+                        <a class="nav-link" href="{% url 'trade_request_list' %}">Trade Requests</a>
                     </li>
                     {% if user.is_superuser %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">ADMIN</a></li>
