@@ -1,5 +1,6 @@
 from .models import Card, UserCard, Decks, DeckCards, TradeRequest, TradeResponse, TradeStatus, OfferedCard, \
     RequestedCard
+from .forms import UserCardForm
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -105,9 +106,17 @@ class TradeConfirmationListView(LoginRequiredMixin, generic.ListView):
 
 
 class TradeRequestListView(LoginRequiredMixin, generic.ListView):
-    model = Card
+    model = TradeRequest  # Associate the view with the TradeRequest model
     template_name = 'cards/trade_request_list.html'
+    context_object_name = 'trade_requests'  # Set the context object name for the queryset
 
+    def get_queryset(self):
+        return TradeRequest.objects.all()  # Return all TradeRequest objects
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = UserCardForm()  # Add the UserCardForm to the context
+        return context
 
 class UserHomeListView(LoginRequiredMixin, generic.ListView):
     model = Card
