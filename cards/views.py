@@ -28,44 +28,9 @@ class CardRepositoryView(LoginRequiredMixin, generic.ListView):
     template_name = 'cards/card_repository.html'
 
 
-class AddEditCardView(LoginRequiredMixin, generic.ListView):
+class CardDetailView(LoginRequiredMixin, generic.DetailView):
     model = Card
-    template_name = 'cards/add_edit_cards.html'
-
-
-class AddEditDeckView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/add_edit_users.html'
-
-
-class AddEditUserCardView(LoginRequiredMixin, generic.DetailView):
-    model = UserCard
-    template_name = 'cards/add_edit_usercards.html'
-
-
-class CardStatsView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/card_stats.html'
-
-
-class CreateEditMyTradesView(LoginRequiredMixin, generic.ListView):
-    model = UserCard
-    template_name = 'cards/create_edit_my_trades.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        return UserCard.objects.filter \
-            (player=self.request.user).order_by('card_id')
-
-
-class EditCardView(LoginRequiredMixin, generic.DetailView):
-    model = Card
-    template_name = 'cards/edit_card.html'
-
-
-class EditDeckView(LoginRequiredMixin, generic.DetailView):
-    model = Card
-    template_name = 'cards/add_edit_deck.html'
+    template_name = 'cards/card_detail.html'
 
 
 class MyCardsListView(LoginRequiredMixin, generic.ListView):
@@ -79,7 +44,7 @@ class MyCardsListView(LoginRequiredMixin, generic.ListView):
 
 
 class MyDecksListView(LoginRequiredMixin, generic.ListView):
-    model = UserCard
+    model = Decks
     template_name = 'cards/my_decks.html'
     paginate_by = 10
 
@@ -88,21 +53,11 @@ class MyDecksListView(LoginRequiredMixin, generic.ListView):
             (player=self.request.user).order_by('card_id')
 
 
-class ReportsDashboardView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/reports_dashboard.html'
+class MyTradeRequestsView(LoginRequiredMixin, generic.ListView):
+    model = TradeRequest
+    template_name = 'cards/my_trade_requests.html'
+    paginate_by = 10
 
-
-class TradeConfirmationListView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/trade_confirmation.html'
-
-
-class TradeRequestListView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/trade_request_list.html'
-
-
-class UserHomeListView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/user_home.html'
+    def get_queryset(self):
+        return UserCard.objects.filter \
+            (player=self.request.user).order_by('card_id')

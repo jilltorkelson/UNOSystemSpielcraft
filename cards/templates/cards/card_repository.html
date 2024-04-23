@@ -9,7 +9,7 @@
 
     {% for card in card_list %}
       <tr>
-        <td><a href="{{ card.get_absolute_url }}">{{ card.card_title }}</a></td>
+        <td>{{ card.card_title }}</td>
           <td>{{ card.card_description }}</td>
           <td>{{ card.card_value }}</td>
       </tr>

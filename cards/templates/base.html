@@ -40,19 +40,16 @@
                         <a class="nav-link" href="{% url 'my_decks' %}">My Decks</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'trade_request_list' %}">Trade Requests</a>
+                        <a class="nav-link" href="{% url 'my_trade_requests' %}">Trade Requests</a>
                     </li>
                     {% if user.is_superuser %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">ADMIN</a>
-                </li>
-
+                        <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">ADMIN</a></li>
                         <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             REPORTS</a>
-            <ul class="dropdown-menu">
-                <li><a class="nav-item-employee" href="{% url 'reports_dashboard' %}">Reports</a></li>
-                <li><a class="nav-item-employee" href="{% url 'card_stats' %}">Card Stats</a></li>
-
-            </ul>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-item-employee" href="#">Reports</a></li>
+                                <li><a class="nav-item-employee" href="#">Card Stats</a></li>
+                            </ul>
         </li>
         {% endif %}
                 {% endif %}
