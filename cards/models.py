@@ -15,6 +15,12 @@ class Card(models.Model):
     card_rules = models.TextField(max_length=500, help_text='Enter the card rules', null=False)
 
     #   card image = models.??(unique=True, null=True)
+    class Meta:
+       ordering = ['card_value', 'card_title']
+
+    def get_absolute_url(self):
+        """Returns the URL to access a particular card instance."""
+        return reverse('add_edit_cards', args=[str(self.card_id)])
 
     def __str__(self):
         """String representation of the Model object"""
@@ -29,6 +35,10 @@ class UserCard(models.Model):
     player = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
     card_id = models.ForeignKey('Card', on_delete=models.RESTRICT, null=True)
 
+    def get_absolute_url(self):
+        """Returns the URL to access a particular user-card instance."""
+        return reverse('add_edit_usercards', args=[str(self.user_card_id)])
+
     def __str__(self):
         """String representation of the Model object"""
         return self.card_id.card_title
@@ -40,6 +50,10 @@ class Decks(models.Model):
                                 help_text='Unique ID for this Deck')
     decks_title = models.CharField(max_length=30, null=True)
     player = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
+
+    def get_absolute_url(self):
+        """Returns the URL to access a particular deck instance."""
+        return reverse('add_edit_deck', args=[str(self.decks_id)])
 
     def __str__(self):
         """String representation of the Model object"""
@@ -54,6 +68,10 @@ class DeckCards(models.Model):
     decks_id = models.ForeignKey('Decks', on_delete=models.RESTRICT, null=False)
     user_card_id = models.ForeignKey('UserCard', on_delete=models.RESTRICT, null=False)
 
+    def get_absolute_url(self):
+        """Returns the URL to access a particular card instance."""
+        return reverse('add_edit_deck', args=[str(self.deck_cards_id)])
+
     def __str__(self):
         """String representation of the Model object"""
         return self.user_card_id.card_id.card_title
@@ -67,16 +85,13 @@ class TradeResponse(models.Model):
     playerResponding = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
     trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.RESTRICT, null=False)
 
+    def get_absolute_url(self):
+        """Returns the URL to access a particular trade response instance."""
+        return reverse('trade_response_detail', args=[str(self.trade_response_id)])
+
     def __str__(self):
         """String representation of the Model object"""
         return self.trade_response_date
-
-
-class TradeStatus(models.Model):
-    trade_status = models.CharField(max_length=12, unique=True)
-
-    def __str__(self):
-        return self.trade_status
 
 
 class TradeRequest(models.Model):
@@ -96,10 +111,13 @@ class TradeRequest(models.Model):
         help_text='Trade Status',
     )
 
+    def get_absolute_url(self):
+        """Returns the URL to access a particular card instance."""
+        return reverse('trade_request_detail', args=[str(self.trade_request_id)])
 
-def __str__(self):
-    """String representation of the Model object"""
-    return self.trade_request_id
+    def __str__(self):
+        """String representation of the Model object"""
+        return self.trade_request_id
 
 
 class OfferedCard(models.Model):

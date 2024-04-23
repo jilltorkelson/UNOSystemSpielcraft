@@ -1,19 +1,22 @@
 {% extends "base.html" %}
 {% load static %}
-
+    # HERE reference name of module from structure chart
 {% block content %}
-    <h1>My Cards</h1>
-
-    {% if my_cards %}
-    <ul>
-      <li>
-      {% for card in my_cards %}
-        <a href="{% url 'my_cards' card.UserCard.pk %}">{{ card.UserCard.card_id.card_title }}</a> ({{ card.UserCard.user_card_quantity }})
-      </li>
-      {% endfor %}
-    </ul>
-
-    {% else %}
-      <p>Get a starter Card Pack!</p>
-    {% endif %}
+  <h1>I currently own __ cards total</h1>  #placeholder for total # of cards in query
+  {% if my_cards %}
+  <div class="list_all">
+  <table class="card_list">
+    {% for card in my_cards %}
+      <tr>
+        <td><a href="{{ card.get_absolute_url }}">{{ card.user_card_id }}</a></td>
+          <td>{{ card.user_card_quantity }}</td>
+          <td>{{ card.card_id.card_title }}</td>
+          <td>{{ card.player.username }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+      </div>
+  {% else %}
+    <p>You do not have any cards.</p>
+  {% endif %}
 {% endblock %}

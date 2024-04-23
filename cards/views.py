@@ -1,4 +1,4 @@
-from .models import Card, UserCard, Decks, DeckCards, TradeRequest, TradeResponse, TradeStatus, OfferedCard, \
+from .models import Card, UserCard, Decks, DeckCards, TradeRequest, TradeResponse, OfferedCard, \
     RequestedCard
 from django.shortcuts import render
 from django.views import generic
@@ -23,6 +23,11 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 
+class CardRepositoryView(LoginRequiredMixin, generic.ListView):
+    model = Card
+    template_name = 'cards/card_repository.html'
+
+
 class AddEditCardView(LoginRequiredMixin, generic.ListView):
     model = Card
     template_name = 'cards/add_edit_cards.html'
@@ -36,17 +41,6 @@ class AddEditDeckView(LoginRequiredMixin, generic.ListView):
 class AddEditUserCardView(LoginRequiredMixin, generic.DetailView):
     model = UserCard
     template_name = 'cards/add_edit_usercards.html'
-
-
-class AddEditUsersView(LoginRequiredMixin, generic.DetailView):
-    model = UserCard
-    template_name = 'cards/add_edit_users.html'
-
-
-class AdminMainView(LoginRequiredMixin, generic.ListView):
-    model = UserCard
-    template_name = 'cards/admin_main.html'
-    paginate_by = 10
 
 
 class CardStatsView(LoginRequiredMixin, generic.ListView):

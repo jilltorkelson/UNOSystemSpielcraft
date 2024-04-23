@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <h1>There are {{ deck_list|length }} decks total</h1>
+
+  {% if deck_list %}
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Deck</th>
+                <th>Title</th>
+                <th>Player</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for deck in deck_list %}
+                <tr>
+                  <td><a href="{{ deck.get_absolute_url }}">{{ deck.decks_id }}</a></td>
+                  <td>{{ deck.decks_title }}</td>
+                  <td>{{ deck.player.username }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p>There are no decks yet created.</p>
+  {% endif %}
+{% endblock %}
