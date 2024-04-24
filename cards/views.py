@@ -72,3 +72,7 @@ class TradeRequestListView(LoginRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         context['form'] = UserCardForm()  # Add the UserCardForm to the context
         return context
+
+def my_trade_requests_view(request):
+    trade_requests = TradeRequest.objects.all()
+    return render(request, 'cards/my_trade_requests.html', {'trade_requests': trade_requests})
