@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+    # HERE reference name of module from structure chart
+
+{% block content %}
+
+  {% if my_decks %}
+  <h1>I currently have *** decks</h1>  #placeholder for total # of cards in query
+
+  <div class="list_all">
+  <table class="card_list">
+    {% for deck in my_decks %}
+      <tr>
+        <td>{{ deck.decks_id }}</td>
+          <td>{{ deck.decks_title }}</td>
+          <td>{{ deck.deckcards }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+      </div>
+  {% else %}
+    <p>You do not have any decks.</p>
+  {% endif %}
+{% endblock %}

@@ -38,6 +38,7 @@ class MyCardsListView(LoginRequiredMixin, generic.ListView):
     """generic class-based view list cards owned by logged in user"""
     model = UserCard
     template_name = 'cards/my_cards.html'
+    context_object_name = 'my_cards'  # Set the context object name for the queryset
     paginate_by = 10
 
     def get_queryset(self):
@@ -51,8 +52,8 @@ class MyDecksListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return UserCard.objects.filter \
-            (player=self.request.user).order_by('card_id')
+        return Decks.objects.filter \
+            (player=self.request.user).order_by('decks_title')
 
 
 class TradeRequestListView(LoginRequiredMixin, generic.ListView):
@@ -67,4 +68,3 @@ class TradeRequestListView(LoginRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         context['form'] = UserCardForm()  # Add the UserCardForm to the context
         return context
-
