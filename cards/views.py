@@ -4,6 +4,8 @@ from .forms import UserCardForm
 from django.shortcuts import render
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+from .models import UserCard
 
 
 # Create your views here.
@@ -34,15 +36,14 @@ class CardDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'cards/card_detail.html'
 
 
-class MyCardsListView(LoginRequiredMixin, generic.ListView):
+class MyCardsListView(LoginRequiredMixin, ListView):
     """generic class-based view list cards owned by logged in user"""
     model = UserCard
     template_name = 'cards/my_cards.html'
     paginate_by = 10
 
     def get_queryset(self):
-        return UserCard.objects.filter \
-            (player=self.request.user)
+        return UserCard.objects.filter(player=self.request.user)
 
 
 class MyDecksListView(LoginRequiredMixin, generic.ListView):
@@ -68,3 +69,8 @@ class TradeRequestListView(LoginRequiredMixin, generic.ListView):
         context['form'] = UserCardForm()  # Add the UserCardForm to the context
         return context
 
+def my_trade_requests_view(request):
+    # Retrieve trade requests associated with the current user (or any logic to get trade requests)
+    trade_requests = TradeRequest.objects.filter(playerRequesting=request.user)
+
+    return render(request, 'my_trade_requests.html', {'trade_requests': trade_requests})

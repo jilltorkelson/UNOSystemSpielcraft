@@ -8,4 +8,5 @@ urlpatterns = [
     path('my_cards/', views.MyCardsListView.as_view(), name='my_cards'),
     path('my_decks/', views.MyDecksListView.as_view(), name='my_decks'),
     path('card_detail/<int:pk>', views.CardDetailView.as_view(), name='card_detail'),
+    path('my_trade_requests/', views.my_trade_requests_view, name='my_trade_requests'),
 ]
