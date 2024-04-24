@@ -1,11 +1,30 @@
 {% extends "base.html" %}
 {% load static %}
     # HERE reference name of module from structure chart
-
+       """View function for the home page"""
 {% block content %}
 
   {% if my_decks %}
   <h1>I currently have *** decks</h1>  #placeholder for total # of cards in query
+
+
+       """View function for the home page"""
+    num_cards = Card.objects.all().count()
+    num_decks = Decks.objects.all().count()
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits + 1
+
+    context = {
+        'num_cards': num_cards,
+        'num_decks': num_decks,
+        'num_visits': num_visits,
+    }
+    # render the HTML template index.html
+    # with the data in the context variable
+
+      return render(request, 'index.html', context=context)
+
+
 
   <div class="list_all">
   <table class="card_list">
@@ -13,7 +32,6 @@
       <tr>
         <td>{{ deck.decks_id }}</td>
           <td>{{ deck.decks_title }}</td>
-          <td>{{ deck.deckcards }}</td>
       </tr>
     {% endfor %}
   </table>
