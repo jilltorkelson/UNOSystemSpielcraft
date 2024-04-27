@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>{{ card.card_title }}</h1>
+
+  <p><strong>Value:</strong> {{ card.card_value }}</p>
+  <p><strong>Description:</strong> {{ card.card_description }}</p>
+  <p><strong>Rules:</strong> {{ card.card_rules }}</p>
+
+    <p>How many of these cards are available? How many owned?</p>
+    {% for card in card.card.all %}
+      <hr>
+    {% endfor %}
+
+{% endblock %}
+

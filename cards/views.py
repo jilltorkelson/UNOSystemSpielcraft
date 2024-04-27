@@ -1,4 +1,4 @@
-from .models import Card, UserCard, Decks, DeckCards, TradeRequest, TradeResponse, TradeStatus, OfferedCard, \
+from .models import Card, UserCard, Decks, DeckCards, TradeRequest, TradeResponse, OfferedCard, \
     RequestedCard
 from .forms import UserCardForm
 from django.shortcuts import render
@@ -24,88 +24,43 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 
-class AddEditCardView(LoginRequiredMixin, generic.ListView):
+class CardRepositoryView(LoginRequiredMixin, generic.ListView):
+    """View function for the card repository page"""
     model = Card
-    template_name = 'cards/add_edit_cards.html'
+    template_name = 'cards/card_repository.html'
 
 
-class AddEditDeckView(LoginRequiredMixin, generic.ListView):
+class CardDetailView(LoginRequiredMixin, generic.DetailView):
+    """View function for the card_detail page"""
     model = Card
-    template_name = 'cards/add_edit_users.html'
-
-
-class AddEditUserCardView(LoginRequiredMixin, generic.DetailView):
-    model = UserCard
-    template_name = 'cards/add_edit_usercards.html'
-
-
-class AddEditUsersView(LoginRequiredMixin, generic.DetailView):
-    model = UserCard
-    template_name = 'cards/add_edit_users.html'
-
-
-class AdminMainView(LoginRequiredMixin, generic.ListView):
-    model = UserCard
-    template_name = 'cards/admin_main.html'
-    paginate_by = 10
-
-
-class CardStatsView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/card_stats.html'
-
-
-class CreateEditMyTradesView(LoginRequiredMixin, generic.ListView):
-    model = UserCard
-    template_name = 'cards/create_edit_my_trades.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        return UserCard.objects.filter \
-            (player=self.request.user).order_by('card_id')
-
-
-class EditCardView(LoginRequiredMixin, generic.DetailView):
-    model = Card
-    template_name = 'cards/edit_card.html'
-
-
-class EditDeckView(LoginRequiredMixin, generic.DetailView):
-    model = Card
-    template_name = 'cards/add_edit_deck.html'
+    template_name = 'cards/card_detail.html'
 
 
 class MyCardsListView(LoginRequiredMixin, generic.ListView):
+    """generic class-based view list cards owned by logged in user"""
     model = UserCard
     template_name = 'cards/my_cards.html'
+    context_object_name = 'my_cards'  # Set the context object name for the queryset
     paginate_by = 10
 
     def get_queryset(self):
         return UserCard.objects.filter \
-            (player=self.request.user).order_by('card_id')
+            (player=self.request.user)
 
 
 class MyDecksListView(LoginRequiredMixin, generic.ListView):
-    model = UserCard
+    """View function for the my_decks page"""
+    model = Decks
     template_name = 'cards/my_decks.html'
     paginate_by = 10
 
-    def get_queryset(self):
-        return UserCard.objects.filter \
-            (player=self.request.user).order_by('card_id')
-
-
-class ReportsDashboardView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/reports_dashboard.html'
-
-
-class TradeConfirmationListView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/trade_confirmation.html'
+    def get_queryset(self):             #to call itself and return the users object
+        return Decks.objects.filter \
+            (player=self.request.user)
 
 
 class TradeRequestListView(LoginRequiredMixin, generic.ListView):
+    """View function for the trade request page"""
     model = TradeRequest  # Associate the view with the TradeRequest model
     template_name = 'cards/trade_request_list.html'
     context_object_name = 'trade_requests'  # Set the context object name for the queryset
@@ -118,6 +73,7 @@ class TradeRequestListView(LoginRequiredMixin, generic.ListView):
         context['form'] = UserCardForm()  # Add the UserCardForm to the context
         return context
 
-class UserHomeListView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/user_home.html'
+def my_trade_requests_view(request):
+    trade_requests = TradeRequest.objects.all()
+    print(trade_requests)
+    return render(request, 'cards/my_trade_requests.html', {'trade_requests': trade_requests})

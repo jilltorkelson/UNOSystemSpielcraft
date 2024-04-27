@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+# reference name in structure chart
+{% block content %}
+  <h1>There are {{ card_list|length }} cards total</h1>
+  {% if card_list %}
+  <div class="list_all">
+    <table class="card_list" style="width: 100%; /* Adjust width as needed */">
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Value</th>
+      </tr>
+
+      {% for card in card_list %}
+        <tr>
+          <td>{{ card.card_title }}</td>
+          <td>{{ card.card_description }}</td>
+          <td>{{ card.card_value }}</td>
+        </tr>
+      {% endfor %}
+
+    </table>
+  </div>
+  {% else %}
+    <p>There are no cards yet created.</p>
+  {% endif %}
+{% endblock %}

@@ -30,7 +30,7 @@
         <div class="collapse navbar-collapse " id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'card_list' %}">Card Repository</a>
+                    <a class="nav-link" href="{% url 'card_repository' %}">Card Repository</a>
                 </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
@@ -42,21 +42,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'trade_request_list' %}">Trade Requests</a>
                     </li>
-            {% if user.is_superuser %}
-                            <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Admin
-            </a>
-
-            <ul class="dropdown-menu">
-
-                <li><a class="nav-item-employee" href="{% url 'add_edit_cards' %}">Add Edit Cards</a></li>
-                <li><a class="nav-item-employee" href="{% url 'add_edit_usercards' %}">Add Edit User Cards</a></li>
-                <li><a class="nav-item-employee" href="{% url 'add_edit_users' %}">Add Edit Users</a></li>
-                <li><a class="nav-item-employee" href="{% url 'reports_dashboard' %}">Reports</a></li>
-                <li><a class="nav-item-employee" href="{% url 'card_stats' %}">Card Stats</a></li>
-
-            </ul>
+                    {% if user.is_superuser %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">ADMIN</a></li>
+                        <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            REPORTS</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-item-employee" href="#">Reports</a></li>
+                                <li><a class="nav-item-employee" href="#">Card Stats</a></li>
+                            </ul>
         </li>
         {% endif %}
                 {% endif %}
@@ -86,8 +79,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
-</body>
-
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="navbar-footer">
@@ -104,5 +95,5 @@
   </div>
 </nav>
 
-
+</body>
 </html>
