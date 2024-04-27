@@ -75,4 +75,5 @@ class TradeRequestListView(LoginRequiredMixin, generic.ListView):
 
 def my_trade_requests_view(request):
     trade_requests = TradeRequest.objects.all()
+    print(trade_requests)
     return render(request, 'cards/my_trade_requests.html', {'trade_requests': trade_requests})
