@@ -137,10 +137,10 @@ h1 {
     padding: 10px;
 }
 
-.all_list {
-    color: yellowgreen;
-    background-color: royalblue;
-
+.list_all {
+    padding: 50px;
+    color: black;
+    font-family: "Calisto MT", serif;
 }
 
 .card_list {
@@ -149,4 +149,28 @@ h1 {
 
 .deck_list {
 
+}
+
+.card-title {
+    font-size: 40px;
+}
+
+.deck-title {
+
+}
+
+.card-quantity {
+    font-size: 30px;
+}
+
+.card-image {
+
+}
+
+.deck-title {
+    font-size: 42px;
+}
+
+.deck-card-num {
+    font-size: 30px;
 }
