@@ -11,14 +11,28 @@
   <table class="card_list">
     {% for card in my_cards %}
       <tr>
-        <td>{{ card.user_card_id }}</td>
-          <td>{{ card.user_card_quantity }}</td>
-          <td>{{ card.card_id.card_title }}</td>
-          <td>{{ card.player.username }}</td>
+        <td class="card-title">{{ card.card_id.card_title }}</td>
+          <td class="card-quantity">{{ card.user_card_quantity }}</td>
+          <td class="card-image">Card Image will be displayed</td>
       </tr>
     {% endfor %}
   </table>
       </div>
+
+
+  <div class="list_all">
+  <table class="card_list">
+    {% for card in my_cards %}
+      <ul>
+        <li class="card-title">{{ card.card_id.card_title }}</li>
+          <li class="card-quantity">{{ card.user_card_quantity }}</li>
+          <li class="card-image">Card Image will be displayed</li>
+      </ul>
+    {% endfor %}
+  </table>
+      </div>
+
+
   {% else %}
     <p>You do not have any cards.</p>
   {% endif %}

@@ -41,7 +41,6 @@ class MyCardsListView(LoginRequiredMixin, generic.ListView):
     model = UserCard
     template_name = 'cards/my_cards.html'
     context_object_name = 'my_cards'  # Set the context object name for the queryset
-    paginate_by = 10
 
     def get_queryset(self):
         return UserCard.objects.filter \
@@ -52,11 +51,21 @@ class MyDecksListView(LoginRequiredMixin, generic.ListView):
     """View function for the my_decks page"""
     model = Decks
     template_name = 'cards/my_decks.html'
-    paginate_by = 10
+    context_object_name = 'my_decks'  # Set the context object name for the queryset
+    num_decks = Decks.objects.all().count()
+
+    context = {
+        'num_decks': num_decks,
+    }
+#    return render(request, 'my_decks.html', context=context)
+
+    # render the HTML template my_decks.html
+    # with the data in the context variable
 
     def get_queryset(self):             #to call itself and return the users object
         return Decks.objects.filter \
             (player=self.request.user)
+
 
 
 class TradeRequestListView(LoginRequiredMixin, generic.ListView):
