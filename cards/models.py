@@ -81,6 +81,8 @@ class TradeResponse(models.Model):
 
 class TradeRequest(models.Model):
     """Model for: """
+    playerRequesting = models.ForeignKey(User, on_delete=models.CASCADE)
+    trade_request_date = models.DateTimeField(auto_now_add=True)
     trade_request_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                                         help_text='Unique ID for this trade request')
     trade_request_date = models.DateTimeField(null=True)
@@ -120,7 +122,7 @@ class RequestedCard(models.Model):
         help_text='Enter the quantity of requested cards (must be greater than 0)'
     )
     card_id = models.ForeignKey('Card', on_delete=models.RESTRICT, null=False)
-    trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.RESTRICT, null=True, default=None)
+    trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.CASCADE, null=True, default=None)
 
     def __str__(self):
         return f'{self.card_id.card_title}'
