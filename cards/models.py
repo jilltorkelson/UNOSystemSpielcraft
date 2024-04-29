@@ -1,9 +1,9 @@
 from django.db import models
 from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
+from django.core.validators import MinValueValidator  # Import MinValueValidator for validation
 import uuid  # Required for unique ids
 from django.contrib.auth.models import User
 from datetime import date
-
 
 class Card(models.Model):
     """Model for: card object - CRUD through game maintenance"""
@@ -102,26 +102,28 @@ class TradeRequest(models.Model):
 
 
 class OfferedCard(models.Model):
-    """Model for: """
     offered_card_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                                       help_text='Unique ID for this Offered Card ')
+                                       help_text='Unique ID for this Offered Card')
     offered_card_quantity = models.PositiveIntegerField(null=False)
-    trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.RESTRICT, null=False)
+    trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.CASCADE, null=False)
     user_card_id = models.ForeignKey('UserCard', on_delete=models.RESTRICT, null=False)
 
     def __str__(self):
-        """String representation of the Model object"""
         return f'{self.user_card_id.card_id.card_title}'
 
 
 class RequestedCard(models.Model):
-    """Model for: """
-    requested_card_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                                         help_text='Unique ID for this Requested Card')
-    requested_card_quantity = models.PositiveIntegerField(null=False)
+    requested_card_id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text='Unique ID for this Requested Card')
+    requested_card_quantity = models.PositiveIntegerField(
+        default=1,  # Default value (optional)
+        validators=[MinValueValidator(1)],  # Ensure the value is at least 1
+        help_text='Enter the quantity of requested cards (must be greater than 0)'
+    )
     card_id = models.ForeignKey('Card', on_delete=models.RESTRICT, null=False)
-    trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.RESTRICT, null=False)
+    trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.RESTRICT, null=True, default=None)
 
     def __str__(self):
-        """String representation of the Model object"""
         return f'{self.card_id.card_title}'
+
+    def get_absolute_url(self):
+        return reverse('requested_card_detail', args=[str(self.requested_card_id)])
