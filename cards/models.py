@@ -13,8 +13,8 @@ class Card(models.Model):
     card_description = models.TextField(max_length=100, help_text='Enter a description of the card', null=False)
     card_value = models.IntegerField(null=False)
     card_rules = models.TextField(max_length=500, help_text='Enter the card rules', null=False)
-
-    #   card image = models.??(unique=True, null=True)
+    card_image = models.ImageField(upload_to='card_images/', null=True, blank=True,
+                                   help_text='Upload an image of the card')
 
     class Meta:
         ordering = ['card_value', 'card_title']
@@ -26,7 +26,6 @@ class Card(models.Model):
     def __str__(self):
         """String representation of the Model object"""
         return f'{self.card_title}'
-
 
 class UserCard(models.Model):
     """Model for: Cards belonging to user"""
