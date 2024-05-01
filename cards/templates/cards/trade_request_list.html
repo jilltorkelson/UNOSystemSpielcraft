@@ -7,48 +7,4 @@
     {{ form.as_p }}
     <button type="submit">Create Trade Request</button>
   </form>
-  {% if trade_requests %}
-    <table>
-      <thead>
-        <tr>
-          <th>Request ID</th>
-          <th>Request Date</th>
-          <th>Requested By</th>
-          <th>Status</th>
-          <th>Offered Cards</th>
-          <th>Requested Cards</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for trade_request in trade_requests %}
-          <tr>
-            <td>{{ trade_request.trade_request_id }}</td>
-            <td>{{ trade_request.trade_request_date }}</td>
-            <td>{{ trade_request.playerRequesting }}</td>
-            <td>{{ trade_request.get_status_display }}</td>
-            <td>
-              {% for offered_card in trade_request.offeredcard_set.all %}
-                {{ offered_card.user_card_id.card_id.card_title }} ({{ offered_card.offered_card_quantity }})<br>
-              {% empty %}
-                None
-              {% endfor %}
-            </td>
-            <td>
-              {% for requested_card in trade_request.requestedcard_set.all %}
-                {{ requested_card.card_id.card_title }} ({{ requested_card.requested_card_quantity }})<br>
-              {% empty %}
-                None
-              {% endfor %}
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="6">No trade requests found.</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>No trade requests found.</p>
-  {% endif %}
 {% endblock %}
