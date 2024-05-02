@@ -5,11 +5,10 @@
 {% block content %}
 
   {% if my_cards %}
-  <h1>I currently own __ cards total</h1>  #placeholder for total # of cards in query
-
-  <div class="list_all">
-  <table class="card_list">
-    {% for card in my_cards %}
+      <h1>I currently own __ cards total</h1>  #placeholder for total # of cards in query
+      <div class="list_all">
+        <table class="card_list">
+        {% for card in my_cards %}
       <tr>
         <td class="card-title">{{ card.card_id.card_title }}</td>
           <td class="card-quantity">{{ card.user_card_quantity }}</td>
@@ -20,17 +19,28 @@
       </div>
 
 
-  <div class="list_all">
-  <table class="card_list">
-    {% for card in my_cards %}
-      <ul>
-        <li class="card-title">{{ card.card_id.card_title }}</li>
+      <div class="list_all">
+    <table class="card_list">
+        {% for card in my_cards %}
+        <ul>
+            <li class="card-title">{{ card.card_id.card_title }}</li>
           <li class="card-quantity">{{ card.user_card_quantity }}</li>
           <li class="card-image">Card Image will be displayed</li>
-      </ul>
-    {% endfor %}
-  </table>
+        </ul>
+        {% endfor %}
+    </table>
       </div>
+
+      {% for card in my_cards %}
+      <div class="card-box">
+        <img src="{{ card.card_image }}" alt="CARD IMG">
+          <ul>
+              <li class="card-desc"></li>
+              <li class="card-value"></li>
+              <li class="card-rules"></li>
+          </ul>
+      </div>
+    {% endfor %}
 
 
   {% else %}
