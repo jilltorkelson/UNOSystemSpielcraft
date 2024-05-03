@@ -1,26 +1,24 @@
 {% extends "base.html" %}
 {% load static %}
+    # HERE reference name of module from structure chart
 
 {% block content %}
 
   {% if card_list %}
       <h1>There are {{ card_list|length }} cards total</h1>
-
       {% for card in card_list %}
       <div class="card-box">
-        {% if card.card_image %}
-                    <img src="{{ card.card_image.url }}" alt="{{ card.card_title }}" style="max-width: 100px; max-height: 100px;">
-                {% else %}
-                    No image available
-        {% endif %}
-            <ul>
-              <li class="card-desc">{{ card.card_description }}</li>
-              <li class="card-value">{{ card.card_value }}</li>
-              <li class="card-rules">{{ card.card_rules }}</li>
-          </ul>
+            <img src="{{ card.card_image.url }}" alt="{{ card.card_title }}" style="max-width: 100px; max-height: 100px;">
+            <div class="card-details">
+                <h2>{{ card.card_title }}</h2>
+                <p>
+                   {{ card.card_description }}<br>
+                    Rules: {{ card.card_rules }}<br>
+                </p>
+                <h4>{{ card.card_value }}</h4></div>
       </div>
     {% endfor %}
-
+</ul>
 
       <div class="list_all">
         <table class="card_list">
