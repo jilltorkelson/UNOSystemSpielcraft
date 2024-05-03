@@ -72,6 +72,7 @@ h1 {
 }
 
 .block-content {
+    min-height: 100vh;
     position: relative;
     margin-top: 50px;
     text-align: center;
@@ -137,10 +138,10 @@ h1 {
     padding: 10px;
 }
 
-.all_list {
-    color: yellowgreen;
-    background-color: royalblue;
-
+.list_all {
+    padding: 50px;
+    color: black;
+    font-family: "Calisto MT", serif;
 }
 
 .card_list {
@@ -150,3 +151,41 @@ h1 {
 .deck_list {
 
 }
+.card-box img{
+    width:100%;
+}
+
+.card-box{
+    position: relative;
+    text-align: center;
+    color: lightsteelblue;
+}
+
+.card-title {
+    font-size: 30px;
+    text-align: center;
+    top: 6px;
+}
+
+.card-details {
+    left: 10px;
+    bottom: 8px;
+    font-size: 24px;
+}
+
+.deck-title {
+
+}
+
+.card-quantity {
+    font-size: 30px;
+}
+
+.deck-title {
+    font-size: 42px;
+}
+
+.deck-card-num {
+    font-size: 30px;
+}
+
