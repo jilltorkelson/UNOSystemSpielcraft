@@ -22,9 +22,11 @@ header {
 
 h1 {
     font-family: "Algerian", fantasy, serif;
-    padding: 10px;
+    padding: 20px;
     color: greenyellow;
-    background-color: dodgerblue;
+    text-align: left;
+    margin-left: 50px;
+    font-size: 80px;
 }
 
 .navbar-container {
@@ -72,11 +74,12 @@ h1 {
 }
 
 .block-content {
+    min-height: 100vh;
     position: relative;
     margin-top: 50px;
     text-align: center;
     padding: 0;
-    background-color: dodgerblue;
+    background-color: #31353b;
 }
 
 
@@ -90,9 +93,11 @@ h1 {
 
 .navbar-footer {
     padding-left: 30%;
-
 }
 
+.card {
+    display: inline-block;
+}
 
 .block-content .centered-logo p {
     position: absolute;
@@ -137,8 +142,60 @@ h1 {
     padding: 10px;
 }
 
+.list_all {
+    padding: 50px;
+    color: black;
+    font-family: "Calisto MT", serif;
+}
+
 .card_list {
-    color: yellowgreen;
-    background-color: royalblue;
 
 }
+
+.deck_list {
+
+}
+.card-box img{
+    max-width: 100%;
+    height: auto;
+}
+
+.card-box{
+    position: relative;
+    border-style: solid;
+    border-width: 6px;
+    border-color: red;
+    width: 30%;
+    margin: 10px;
+}
+
+.card-details {
+    font-size: 30px;
+    font-family: "Garamond", fantasy, serif;
+
+}
+
+.card-details h2{
+
+}
+
+.card-details p{
+
+}
+
+.deck-title {
+
+}
+
+.card-quantity {
+    font-size: 30px;
+}
+
+.deck-title {
+    font-size: 42px;
+}
+
+.deck-card-num {
+    font-size: 30px;
+}
+

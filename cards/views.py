@@ -1,15 +1,17 @@
-from .models import Card, UserCard, Decks, DeckCards, TradeRequest, TradeResponse, TradeStatus, OfferedCard, \
-    RequestedCard
-from django.shortcuts import render
-from django.views import generic
+from datetime import datetime
+
+from django.shortcuts import render, redirect
+from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards
+from .forms import UserCardForm
 
 
-# Create your views here.
 def index(request):
     """View function for the home page"""
-    num_cards = Card.objects.all().count()
-    num_decks = Decks.objects.all().count()
+    num_cards = Card.objects.count()
+    num_decks = Decks.objects.count()
     num_visits = request.session.get('num_visits', 0)
     request.session['num_visits'] = num_visits + 1
 
@@ -18,92 +20,101 @@ def index(request):
         'num_decks': num_decks,
         'num_visits': num_visits,
     }
-    # render the HTML template index.html
-    # with the data in the context variable
     return render(request, 'index.html', context=context)
 
 
-class AssignCardsListView(LoginRequiredMixin, generic.DetailView):
-    model = UserCard
-    template_name = 'cards/UserCards_AddEdit.html'
-
-
-class CardListView(LoginRequiredMixin, generic.ListView):
+class CardRepositoryView(ListView):
+    """View for the card repository page"""
     model = Card
-    template_name = 'cards/card_list.html'
+    template_name = 'cards/card_repository.html'
 
 
-class CardStatsView(LoginRequiredMixin, generic.ListView):
+class CardDetailView(LoginRequiredMixin, ListView):
+    """View for the card detail page"""
     model = Card
-    template_name = 'cards/card_stats.html'
+    template_name = 'cards/card_detail.html'
 
 
-class DecksDetailView(LoginRequiredMixin, generic.DetailView):
-    model = Card
-    template_name = 'cards/deck_detail.html'
-
-
-class DecksListView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/deck_list.html'
-
-
-class MaintenanceMainListView(LoginRequiredMixin, generic.ListView):
-    model = UserCard
-    template_name = 'cards/maintenance_main.html'
-    paginate_by = 10
-
-
-class MyCardsListView(LoginRequiredMixin, generic.ListView):
+class MyCardsListView(LoginRequiredMixin, ListView):
+    """View to list cards owned by logged-in user"""
     model = UserCard
     template_name = 'cards/my_cards.html'
-    paginate_by = 10
+    context_object_name = 'my_cards'
 
     def get_queryset(self):
-        return UserCard.objects.filter \
-            (player=self.request.user).order_by('card_id')
+        return UserCard.objects.filter(player=self.request.user)
 
 
-class MyDecksListView(LoginRequiredMixin, generic.ListView):
-    model = UserCard
+class MyDecksListView(LoginRequiredMixin, ListView):
+    """View for the my decks page"""
+    model = Decks
     template_name = 'cards/my_decks.html'
-    paginate_by = 10
+    context_object_name = 'my_decks'
 
     def get_queryset(self):
-        return UserCard.objects.filter \
-            (player=self.request.user).order_by('card_id')
+        return Decks.objects.filter(player=self.request.user)
 
 
-class MyTradesListView(LoginRequiredMixin, generic.ListView):
-    model = UserCard
-    template_name = 'cards/my_trades.html'
-    paginate_by = 10
-
-    def get_queryset(self):
-        return UserCard.objects.filter \
-            (player=self.request.user).order_by('card_id')
+class TradeRequestListView(LoginRequiredMixin, View):
+    """View to handle trade requests"""
+    def get(self, request, *args, **kwargs):
+        """Handle GET request to retrieve and display trade requests"""
+        trade_requests = TradeRequest.objects.filter(status='p')
+        return render(request, 'cards/trade_request_list.html', {'trade_requests': trade_requests})
 
 
-class PlayerHomeListView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/player_home.html'
+def trade_request_create_view(request):
+    """View function to handle creation of a new trade request"""
+    if request.method == 'POST':
+        form = UserCardForm(request.POST)
+        if form.is_valid():
+            offered_cards = form.cleaned_data['offered_cards']
+            requested_cards = form.cleaned_data['requested_cards']
+            new_trade_request = TradeRequest.objects.create(
+                playerRequesting=request.user, trade_request_date=datetime.now())
+            for card in offered_cards:
+                OfferedCard.objects.create(trade_request_id=new_trade_request, user_card_id=card, offered_card_quantity=1)
+            for card in requested_cards:
+                RequestedCard.objects.create(trade_request_id=new_trade_request, card_id=card)
+            return redirect('my_trade_requests')
+    else:
+        form = UserCardForm()
+
+    return render(request, 'cards/trade_request_create.html', {'form': form})
 
 
-class ReportsDashboardView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/reports_dashboard.html'
+def deck_create_view(request):
+    """View function to handle creation of a new deck"""
+    if request.method == 'POST':
+        form = 1#DeckForm(request.POST)
+        if form.is_valid():
+            deck_cards = form.cleaned_data['deck_cards']
+            new_deck = Decks.objects.create(player=request.user, title=form.cleaned_data['title'])
+            for card in deck_cards:
+                DeckCards.objects.create(decks_id=new_deck.decks_id, user_card_id=card, deck_cards_quantity=1)
+            return redirect('my_decks')
+    else:
+        form =1 #DeckForm()
+    return render(request, 'cards/deck_create.html', {'form': form})
 
 
-class TradeConfirmationListView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/trade_confirmation.html'
+class MyTradeRequestsListView(LoginRequiredMixin, View):
+    """View to handle displaying and processing trade requests specific to the logged-in user"""
+    def get(self, request, *args, **kwargs):
+        trade_requests = TradeRequest.objects.filter(playerRequesting=request.user)
+        return render(request, 'cards/my_trade_requests.html', {'trade_requests': trade_requests})
 
+    def post(self, request, *args, **kwargs):
+        # Handle form submission logic for creating new trade requests
+        form = UserCardForm(request.POST)
+        if form.is_valid():
+            new_trade_request = TradeRequest.objects.create(playerRequesting=request.user)
+            for card in form.cleaned_data['offered_cards']:
+                new_trade_request.offeredcard_set.create(user_card_id=card, offered_card_quantity=1)
+            for card in form.cleaned_data['requested_cards']:
+                new_trade_request.requestedcard_set.create(card_id=card, requested_card_quantity=1)
+            return redirect('my_trade_requests')
 
-class TradeRequestListView(LoginRequiredMixin, generic.ListView):
-    model = Card
-    template_name = 'cards/trade_request_list.html'
-
-
-class UserListView(LoginRequiredMixin, generic.ListView):
-    model = UserCard
-    template_name = 'cards/user_list.html'
+        # If form is invalid, retrieve trade requests and render the template with the form
+        trade_requests = TradeRequest.objects.filter(playerRequesting=request.user)
+        return render(request, 'cards/my_trade_requests.html', {'trade_requests': trade_requests, 'form': form})

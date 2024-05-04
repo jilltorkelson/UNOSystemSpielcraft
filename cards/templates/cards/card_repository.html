@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+    # HERE reference name of module from structure chart
+
+{% block content %}
+
+  <h1>Cards</h1>
+  {% if card_list %}
+      <div class="card-deck" style="margin: 25px;">
+      {% for card in card_list %}
+      <div class="card" style="max-width: 15rem;">
+        {% if card.card_image %}
+            <img class="card-img-top" src="{{ card.card_image.url }}"
+                 alt="{{ card.card_title }}">
+        {% else %}
+            No image available
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ card.card_title }}</h5>
+            <p class="card-text">{{ card.card_description }}</p>
+            <p class="card-text">{{ card.card_value }}</p>
+            <p class="card-text">{{ card.card_rules }}</p>
+        </div>
+      </div>
+  {% endfor %}
+
+  {% else %}
+    <p>There are no cards yet created.</p>
+  {% endif %}
+{% endblock %}
