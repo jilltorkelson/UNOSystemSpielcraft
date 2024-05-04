@@ -9,6 +9,7 @@
                     <th scope="col">Date</th>
                     <th scope="col">Requested Cards</th>
                     <th scope="col">Offered Cards</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +29,11 @@
                             {% empty %}
                                 None
                             {% endfor %}
-                        </tr>
+                        </td>
+                        <td>
+                            <a href="{% url 'accept_trade_request' pk=tradeRequest.trade_request_id %}" class='btn btn-info'>Accept</a>
+                        </td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

@@ -57,8 +57,8 @@ class DeckCards(models.Model):
     deck_cards_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                                      help_text='Unique ID for this relationship between user cards & decks')
     deck_cards_quantity = models.PositiveIntegerField(null=False)
-    decks_id = models.ForeignKey('Decks', on_delete=models.RESTRICT, null=False)
-    user_card_id = models.ForeignKey('UserCard', on_delete=models.RESTRICT, null=False)
+    decks_id = models.ForeignKey('Decks', on_delete=models.CASCADE, null=False)
+    user_card_id = models.ForeignKey('UserCard', on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         """String representation of the Model object"""
