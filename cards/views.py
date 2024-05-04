@@ -23,7 +23,7 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 
-class CardRepositoryView(LoginRequiredMixin, ListView):
+class CardRepositoryView(ListView):
     """View for the card repository page"""
     model = Card
     template_name = 'cards/card_repository.html'
