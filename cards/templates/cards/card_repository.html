@@ -3,49 +3,26 @@
 
 {% block content %}
 
+  <h1>Cards</h1>
   {% if card_list %}
-      <h1>There are {{ card_list|length }} cards total</h1>
-
+      <div class="card-deck" style="margin: 25px;">
       {% for card in card_list %}
-      <div class="card-box">
+      <div class="card" style="max-width: 15rem;">
         {% if card.card_image %}
-                    <img src="{{ card.card_image.url }}" alt="{{ card.card_title }}" style="max-width: 100px; max-height: 100px;">
-                {% else %}
-                    No image available
+            <img class="card-img-top" src="{{ card.card_image.url }}" 
+                 alt="{{ card.card_title }}">
+        {% else %}
+            No image available
         {% endif %}
-            <ul>
-              <li class="card-desc">{{ card.card_description }}</li>
-              <li class="card-value">{{ card.card_value }}</li>
-              <li class="card-rules">{{ card.card_rules }}</li>
-          </ul>
+        <div class="card-body">
+            <h5 class="card-title">{{ card.card_title }}</h5>
+            <p class="card-text">{{ card.card_description }}</p>
+            <p class="card-text">{{ card.card_value }}</p>
+            <p class="card-text">{{ card.card_rules }}</p>
+        </div>
       </div>
-    {% endfor %}
+  {% endfor %}
 
-
-      <div class="list_all">
-        <table class="card_list">
-            <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Value</th>
-                <th>Image</th>
-            </tr>
-            {% for card in card_list %}
-            <tr>
-                <td>{{ card.card_title }}</td>
-                <td>{{ card.card_description }}</td>
-                <td>{{ card.card_value }}</td>
-                <td>
-                {% if card.card_image %}
-                    <img src="{{ card.card_image.url }}" alt="{{ card.card_title }}" style="max-width: 100px; max-height: 100px;">
-                {% else %}
-                    No image available
-                {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-      </table>
-    </div>
   {% else %}
     <p>There are no cards yet created.</p>
   {% endif %}

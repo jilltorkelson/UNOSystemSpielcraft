@@ -3,47 +3,27 @@
     # HERE reference name of module from structure chart
 
 {% block content %}
-
-  {% if my_cards %}
-      <h1>I currently own __ cards total</h1>  #placeholder for total # of cards in query
-      <div class="list_all">
-        <table class="card_list">
-        {% for card in my_cards %}
-      <tr>
-        <td class="card-title">{{ card.card_id.card_title }}</td>
-          <td class="card-quantity">{{ card.user_card_quantity }}</td>
-          <td class="card-image">Card Image will be displayed</td>
-      </tr>
-    {% endfor %}
-  </table>
-      </div>
-
-
-      <div class="list_all">
-    <table class="card_list">
-        {% for card in my_cards %}
-        <ul>
-            <li class="card-title">{{ card.card_id.card_title }}</li>
-          <li class="card-quantity">{{ card.user_card_quantity }}</li>
-          <li class="card-image">Card Image will be displayed</li>
-        </ul>
+    <h1>Owned Cards</h1>
+    {% if my_cards %}
+        <div class="card-deck" style="margin: 25px;">
+        {% for myCard in my_cards %}
+            <div class="card" style="max-width: 15rem;">
+            {% if myCard.card_id.card_image %}
+                <img class="card-img-top" src="{{ myCard.card_id.card_image.url }}"
+                     alt="{{ myCard.card_id.card_title }}">
+            {% else %}
+                No image available
+            {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ myCard.card_id.card_title }}</h5>
+                    <p class="card-text">{{ myCard.card_id.card_description }}</p>
+                    <p class="card-text">{{ myCard.card_id.card_value }}</p>
+                    <p class="card-text">{{ myCard.card_id.card_rules }}</p>
+                </div>
+            </div>
         {% endfor %}
-    </table>
-      </div>
 
-      {% for card in my_cards %}
-      <div class="card-box">
-        <img src="{{ card.card_image }}" alt="CARD IMG">
-          <ul>
-              <li class="card-desc"></li>
-              <li class="card-value"></li>
-              <li class="card-rules"></li>
-          </ul>
-      </div>
-    {% endfor %}
-
-
-  {% else %}
-    <p>You do not have any cards.</p>
-  {% endif %}
+    {% else %}
+        <p>You do not have any cards.</p>
+    {% endif %}
 {% endblock %}

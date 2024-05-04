@@ -3,37 +3,25 @@
     # HERE reference name of module from structure chart
        """View function for the home page"""
 {% block content %}
- {% if my_decks %}
-  <h1>I currently have *** decks</h1>  #placeholder for total # of cards in query
-
-
-
-  <div class="list_all">
-  <table class="card_list">
-    {% for deck in my_decks %}
-      <tr>
-          <td class="deck-title">{{ deck.decks_title }}</td>
-          <td class="deck-card-num">Code to display # of cards in deck</td>
-      </tr>
-    {% endfor %}
-  </table>
-      </div>
-
-
-
-  <div class="list_all">
-  <table class="card_list">
-    {% for deck in my_decks %}
-      <ul>
-          <li class="deck-title">{{ deck.decks_title }}</li>
-          <li class="deck-card-num">Code to display # of cards in deck</li>
-      </ul>
-    {% endfor %}
-  </table>
-      </div>
-
-
-  {% else %}
-    <p>You do not have any decks.</p>
-  {% endif %}
+    <h1>CREATED DECKS</h1>
+    {% if my_decks %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Deck Title</th>
+                    <th scope="col">Card Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for deck in my_decks %}
+                    <tr>
+                        <td>{{ deck.decks_title }}</td>
+                        <td>Code to display # of cards in deck</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You do not have any decks.</p>
+    {% endif %}
 {% endblock %}
