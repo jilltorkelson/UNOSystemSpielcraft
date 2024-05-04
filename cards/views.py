@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
-from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards
+from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards, TradeResponse
 from .forms import UserCardForm
 from django.contrib import messages
 
@@ -104,22 +104,17 @@ def deck_create_view(request):
 def accept_trade_request_view(request, pk):
     trade_request = TradeRequest.objects.get(pk=pk)
     try:
-        offered_cards = trade_request.offeredcard_set.all
-        for card in offered_cards:
-            UserCard.objects.create(player=request.user, card_id=card)
-        requested_cards = trade_request.requestedcard_set.all
-        for card in requested_cards:
-            UserCard.objects.create(player=trade_request.playerRequesting, card_id=card)
+        for card in trade_request.offeredcard_set.all():
+            UserCard.objects.create(player=request.user, card_id=card.user_card_id.card_id,
+                                    user_card_quantity=card.offered_card_quantity)
+        for card in trade_request.requestedcard_set.all():
+            UserCard.objects.create(player=trade_request.playerRequesting, card_id=card.card_id,
+                                    user_card_quantity=card.requested_card_quantity)
+        TradeResponse.objects.create(trade_response_date=datetime.now(), trade_request_id=trade_request,
+                                     playerResponding=request.user)
+        TradeRequest.objects.filter(pk=pk).update(status='f')
         messages.success(request, 'trade request accepted')
-    except:
+    except Exception as ex:
         messages.error(request, 'trade request failed')
         return redirect('trade_request_list')
     return redirect('my_cards')
-
-
-class MyTradeRequestsListView(LoginRequiredMixin, View):
-    """View to handle displaying and processing trade requests specific to the logged-in user"""
-
-    def get(self, request, *args, **kwargs):
-        trade_requests = TradeRequest.objects.filter(playerRequesting=request.user)
-        return render(request, 'cards/my_trade_requests.html', {'trade_requests': trade_requests})
