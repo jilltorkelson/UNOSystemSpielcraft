@@ -22,9 +22,11 @@ header {
 
 h1 {
     font-family: "Algerian", fantasy, serif;
-    padding: 10px;
+    padding: 20px;
     color: greenyellow;
-    background-color: dodgerblue;
+    text-align: left;
+    margin-left: 50px;
+    font-size: 80px;
 }
 
 .navbar-container {
@@ -77,7 +79,7 @@ h1 {
     margin-top: 50px;
     text-align: center;
     padding: 0;
-    background-color: dodgerblue;
+    background-color: #31353b;
 }
 
 
@@ -91,9 +93,11 @@ h1 {
 
 .navbar-footer {
     padding-left: 30%;
-
 }
 
+.card {
+    display: inline-block;
+}
 
 .block-content .centered-logo p {
     position: absolute;

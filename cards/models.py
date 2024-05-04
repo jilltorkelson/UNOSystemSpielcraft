@@ -3,7 +3,7 @@ from django.urls import reverse  # Used to generate URLs by reversing the URL pa
 from django.core.validators import MinValueValidator  # Import MinValueValidator for validation
 import uuid  # Required for unique ids
 from django.contrib.auth.models import User
-from datetime import date
+
 
 class Card(models.Model):
     """Model for: card object - CRUD through game maintenance"""
@@ -80,11 +80,9 @@ class TradeResponse(models.Model):
 
 class TradeRequest(models.Model):
     """Model for: """
-    playerRequesting = models.ForeignKey(User, on_delete=models.CASCADE)
     trade_request_date = models.DateTimeField(auto_now_add=True)
     trade_request_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                                         help_text='Unique ID for this trade request')
-    trade_request_date = models.DateTimeField(null=True)
     playerRequesting = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
     STATUS = (
         ('c', 'Cancelled'), ('p', 'Pending'), ('f', 'Finished'),

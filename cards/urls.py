@@ -12,6 +12,7 @@ urlpatterns = [
     path('card_detail/<int:pk>/', views.CardDetailView.as_view(), name='card_detail'),
     path('my_trade_requests/', views.MyTradeRequestsListView.as_view(), name='my_trade_requests'),
     path('trade_request_create/', views.trade_request_create_view, name='trade_request_create'),
+    path('deck_create/', views.deck_create_view, name='deck_create')
 ]
 
 # Serve media files during development
