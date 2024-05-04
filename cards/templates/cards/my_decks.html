@@ -10,14 +10,20 @@
             <thead>
                 <tr>
                     <th scope="col">Deck Title</th>
-                    <th scope="col">Card Count</th>
+                    <th scope="col">Cards</th>
                 </tr>
             </thead>
             <tbody>
                 {% for deck in my_decks %}
                     <tr>
                         <td>{{ deck.decks_title }}</td>
-                        <td>Code to display # of cards in deck</td>
+                        <td>
+                            {% for deck_card in deck.deckcards_set.all %}
+                                {{ deck_card.user_card_id.card_id.card_title }} ({{ deck_card.deck_cards_quantity }})<br>
+                            {% empty %}
+                                None
+                            {% endfor %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
