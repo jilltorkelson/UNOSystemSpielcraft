@@ -3,7 +3,8 @@
     # HERE reference name of module from structure chart
        """View function for the home page"""
 {% block content %}
-    <h1>CREATED DECKS</h1>
+    <h1>Your Decks</h1>
+        <a href="{% url 'deck_create' %}" class="btn btn-info" style="float: left; margin-left: 30px;">Create Deck</a>
     {% if my_decks %}
         <table class="table">
             <thead>

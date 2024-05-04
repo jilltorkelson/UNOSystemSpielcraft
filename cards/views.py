@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
-from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard
+from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards
 from .forms import UserCardForm
 
 def index(request):
@@ -86,6 +86,22 @@ def trade_request_create_view(request):
         form = UserCardForm()
 
     return render(request, 'cards/trade_request_create.html', {'form': form})
+
+
+def deck_create_view(request):
+    """View function to handle creation of a new deck"""
+    if request.method == 'POST':
+        form = 1#DeckForm(request.POST)
+        if form.is_valid():
+            deck_cards = form.cleaned_data['deck_cards']
+            new_deck = Decks.objects.create(player=request.user, title=form.cleaned_data['title'])
+            for card in deck_cards:
+                DeckCards.objects.create(decks_id=new_deck.decks_id, user_card_id=card, deck_cards_quantity=1)
+            return redirect('my_decks')
+    else:
+        form =1 #DeckForm()
+    return render(request, 'cards/deck_create.html', {'form': form})
+
 
 class MyTradeRequestsListView(LoginRequiredMixin, View):
     """View to handle displaying and processing trade requests specific to the logged-in user"""

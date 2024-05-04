@@ -4,6 +4,7 @@
 
 {% block content %}
     <h1>Owned Cards</h1>
+    <a href="{% url 'trade_request_create' %}" class="btn btn-info" style="float: left; margin-left: 30px;">Create Trade Request</a>
     {% if my_cards %}
         <div class="card-deck" style="margin: 25px;">
         {% for myCard in my_cards %}
