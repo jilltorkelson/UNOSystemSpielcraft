@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+    # HERE reference name of module from structure chart
+       """View function for the home page"""
+{% block content %}
+    <h1>Your Decks</h1>
+        <a href="{% url 'deck_create' %}" class="btn btn-info" style="float: left; margin-left: 30px;">Create Deck</a>
+    {% if my_decks %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Deck Title</th>
+                    <th scope="col">Cards</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for deck in my_decks %}
+                    <tr>
+                        <td>{{ deck.decks_title }}</td>
+                        <td>
+                            {% for deck_card in deck.deckcards_set.all %}
+                                {{ deck_card.user_card_id.card_id.card_title }} ({{ deck_card.deck_cards_quantity }})<br>
+                            {% empty %}
+                                None
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You do not have any decks.</p>
+    {% endif %}
+{% endblock %}

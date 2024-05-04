@@ -1,19 +1,30 @@
 {% extends "base.html" %}
 {% load static %}
+    # HERE reference name of module from structure chart
 
 {% block content %}
-    <h1>My Cards</h1>
-
+    <h1>Owned Cards</h1>
+    <a href="{% url 'trade_request_create' %}" class="btn btn-info" style="float: left; margin-left: 30px;">Create Trade Request</a>
     {% if my_cards %}
-    <ul>
-      <li>
-      {% for card in my_cards %}
-        <a href="{% url 'my_cards' card.UserCard.pk %}">{{ card.UserCard.card_id.card_title }}</a> ({{ card.UserCard.user_card_quantity }})
-      </li>
-      {% endfor %}
-    </ul>
+        <div class="card-deck" style="margin: 25px;">
+        {% for myCard in my_cards %}
+            <div class="card" style="max-width: 15rem;">
+            {% if myCard.card_id.card_image %}
+                <img class="card-img-top" src="{{ myCard.card_id.card_image.url }}"
+                     alt="{{ myCard.card_id.card_title }}">
+            {% else %}
+                No image available
+            {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ myCard.card_id.card_title }}</h5>
+                    <p class="card-text">{{ myCard.card_id.card_description }}</p>
+                    <p class="card-text">{{ myCard.card_id.card_value }}</p>
+                    <p class="card-text">{{ myCard.card_id.card_rules }}</p>
+                </div>
+            </div>
+        {% endfor %}
 
     {% else %}
-      <p>Get a starter Card Pack!</p>
+        <p>You do not have any cards.</p>
     {% endif %}
 {% endblock %}
