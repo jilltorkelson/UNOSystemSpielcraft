@@ -4,8 +4,9 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
-from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards
+from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards, TradeResponse
 from .forms import UserCardForm
+from django.contrib import messages
 
 
 def index(request):
@@ -57,6 +58,7 @@ class MyDecksListView(LoginRequiredMixin, ListView):
 
 class TradeRequestListView(LoginRequiredMixin, View):
     """View to handle trade requests"""
+
     def get(self, request, *args, **kwargs):
         """Handle GET request to retrieve and display trade requests"""
         trade_requests = TradeRequest.objects.filter(status='p')
@@ -73,10 +75,11 @@ def trade_request_create_view(request):
             new_trade_request = TradeRequest.objects.create(
                 playerRequesting=request.user, trade_request_date=datetime.now())
             for card in offered_cards:
-                OfferedCard.objects.create(trade_request_id=new_trade_request, user_card_id=card, offered_card_quantity=1)
+                OfferedCard.objects.create(trade_request_id=new_trade_request, user_card_id=card,
+                                           offered_card_quantity=1)
             for card in requested_cards:
                 RequestedCard.objects.create(trade_request_id=new_trade_request, card_id=card)
-            return redirect('my_trade_requests')
+            return redirect('trade_request_list')
     else:
         form = UserCardForm()
 
@@ -86,7 +89,7 @@ def trade_request_create_view(request):
 def deck_create_view(request):
     """View function to handle creation of a new deck"""
     if request.method == 'POST':
-        form = 1#DeckForm(request.POST)
+        form = 1  # DeckForm(request.POST)
         if form.is_valid():
             deck_cards = form.cleaned_data['deck_cards']
             new_deck = Decks.objects.create(player=request.user, title=form.cleaned_data['title'])
@@ -94,27 +97,41 @@ def deck_create_view(request):
                 DeckCards.objects.create(decks_id=new_deck.decks_id, user_card_id=card, deck_cards_quantity=1)
             return redirect('my_decks')
     else:
-        form =1 #DeckForm()
+        form = 1  # DeckForm()
     return render(request, 'cards/deck_create.html', {'form': form})
 
 
-class MyTradeRequestsListView(LoginRequiredMixin, View):
-    """View to handle displaying and processing trade requests specific to the logged-in user"""
-    def get(self, request, *args, **kwargs):
-        trade_requests = TradeRequest.objects.filter(playerRequesting=request.user)
-        return render(request, 'cards/my_trade_requests.html', {'trade_requests': trade_requests})
-
-    def post(self, request, *args, **kwargs):
-        # Handle form submission logic for creating new trade requests
-        form = UserCardForm(request.POST)
-        if form.is_valid():
-            new_trade_request = TradeRequest.objects.create(playerRequesting=request.user)
-            for card in form.cleaned_data['offered_cards']:
-                new_trade_request.offeredcard_set.create(user_card_id=card, offered_card_quantity=1)
-            for card in form.cleaned_data['requested_cards']:
-                new_trade_request.requestedcard_set.create(card_id=card, requested_card_quantity=1)
-            return redirect('my_trade_requests')
-
-        # If form is invalid, retrieve trade requests and render the template with the form
-        trade_requests = TradeRequest.objects.filter(playerRequesting=request.user)
-        return render(request, 'cards/my_trade_requests.html', {'trade_requests': trade_requests, 'form': form})
+def accept_trade_request_view(request, pk):
+    trade_request = TradeRequest.objects.get(pk=pk)
+    try:
+        for offered_card in trade_request.offeredcard_set.all():
+            current_card = (UserCard.objects.filter(card_id=offered_card.user_card_id.card_id)
+                            .filter(player=request.user).first())
+            if current_card:
+                (UserCard.objects.filter(pk=current_card.user_card_id)
+                 .update(user_card_quantity=current_card.user_card_quantity + offered_card.offered_card_quantity))
+            else:
+                UserCard.objects.create(player=request.user, card_id=offered_card.user_card_id.card_id,
+                                        user_card_quantity=offered_card.offered_card_quantity)
+            if offered_card.offered_card_quantity == offered_card.user_card_id.quantity:
+                offered_card.user_card_id.delete()
+            else:
+                (UserCard.objects.filter(pk=offered_card.user_card_id)
+                 .update(user_card_quantity=offered_card.user_card_quantity - offered_card.offered_card_quantity))
+        for requested_card in trade_request.requestedcard_set.all():
+            current_card = (UserCard.objects.filter(card_id=requested_card.card_id)
+                            .filter(player=trade_request.playerRequesting).first())
+            if current_card:
+                (UserCard.objects.filter(pk=current_card.user_card_id)
+                 .update(user_card_quantity=current_card.user_card_quantity + requested_card.requested_card_quantity))
+            else:
+                UserCard.objects.create(player=trade_request.playerRequesting, card_id=requested_card.card_id,
+                                        user_card_quantity=requested_card.requested_card_quantity)
+        TradeResponse.objects.create(trade_response_date=datetime.now(), trade_request_id=trade_request,
+                                     playerResponding=request.user)
+        TradeRequest.objects.filter(pk=pk).update(status='f')
+        messages.success(request, 'trade request accepted')
+    except Exception as ex:
+        messages.error(request, 'trade request failed')
+        return redirect('trade_request_list')
+    return redirect('my_cards')
