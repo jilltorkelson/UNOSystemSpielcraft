@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
 from django.core.validators import MinValueValidator  # Import MinValueValidator for validation
@@ -79,8 +81,9 @@ class TradeResponse(models.Model):
 
 
 class TradeRequest(models.Model):
-    """Model for: """
-    trade_request_date = models.DateTimeField(auto_now_add=True)
+    """Model for: the trade request"""
+    trade_request_date = models.DateTimeField(auto_now_add=True, null=True)
+#    trade_request_date = models.(default=datetime.datetime.strftime("%Y-%m-%d %H:%M:%S"))
     trade_request_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                                         help_text='Unique ID for this trade request')
     playerRequesting = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
