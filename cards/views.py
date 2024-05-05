@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
@@ -79,7 +79,7 @@ def trade_request_create_view(request):
                                            offered_card_quantity=1)
             for card in requested_cards:
                 RequestedCard.objects.create(trade_request_id=new_trade_request, card_id=card)
-            return redirect('my_trade_requests')
+            return redirect('trade_request_list')
     else:
         form = UserCardForm()
 
@@ -104,12 +104,29 @@ def deck_create_view(request):
 def accept_trade_request_view(request, pk):
     trade_request = TradeRequest.objects.get(pk=pk)
     try:
-        for card in trade_request.offeredcard_set.all():
-            UserCard.objects.create(player=request.user, card_id=card.user_card_id.card_id,
-                                    user_card_quantity=card.offered_card_quantity)
-        for card in trade_request.requestedcard_set.all():
-            UserCard.objects.create(player=trade_request.playerRequesting, card_id=card.card_id,
-                                    user_card_quantity=card.requested_card_quantity)
+        for offered_card in trade_request.offeredcard_set.all():
+            current_card = (UserCard.objects.filter(card_id=offered_card.user_card_id.card_id)
+                            .filter(player=request.user).first())
+            if current_card:
+                (UserCard.objects.filter(pk=current_card.user_card_id)
+                 .update(user_card_quantity=current_card.user_card_quantity + offered_card.offered_card_quantity))
+            else:
+                UserCard.objects.create(player=request.user, card_id=offered_card.user_card_id.card_id,
+                                        user_card_quantity=offered_card.offered_card_quantity)
+            if offered_card.offered_card_quantity == offered_card.user_card_id.quantity:
+                offered_card.user_card_id.delete()
+            else:
+                (UserCard.objects.filter(pk=offered_card.user_card_id)
+                 .update(user_card_quantity=offered_card.user_card_quantity - offered_card.offered_card_quantity))
+        for requested_card in trade_request.requestedcard_set.all():
+            current_card = (UserCard.objects.filter(card_id=requested_card.card_id)
+                            .filter(player=trade_request.playerRequesting).first())
+            if current_card:
+                (UserCard.objects.filter(pk=current_card.user_card_id)
+                 .update(user_card_quantity=current_card.user_card_quantity + requested_card.requested_card_quantity))
+            else:
+                UserCard.objects.create(player=trade_request.playerRequesting, card_id=requested_card.card_id,
+                                        user_card_quantity=requested_card.requested_card_quantity)
         TradeResponse.objects.create(trade_response_date=datetime.now(), trade_request_id=trade_request,
                                      playerResponding=request.user)
         TradeRequest.objects.filter(pk=pk).update(status='f')
