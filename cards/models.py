@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
 from django.core.validators import MinValueValidator  # Import MinValueValidator for validation
@@ -37,6 +35,9 @@ class UserCard(models.Model):
     player = models.ForeignKey(User, on_delete=models.RESTRICT, null=False, blank=False)
     card_id = models.ForeignKey('Card', on_delete=models.RESTRICT, null=True)
 
+    class Meta:
+        unique_together = ('player', 'card_id')
+
     def __str__(self):
         """String representation of the Model object"""
         return f'{self.card_id.card_title}'
@@ -59,8 +60,11 @@ class DeckCards(models.Model):
     deck_cards_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                                      help_text='Unique ID for this relationship between user cards & decks')
     deck_cards_quantity = models.PositiveIntegerField(null=False)
-    decks_id = models.ForeignKey('Decks', on_delete=models.RESTRICT, null=False)
-    user_card_id = models.ForeignKey('UserCard', on_delete=models.RESTRICT, null=False)
+    decks_id = models.ForeignKey('Decks', on_delete=models.CASCADE, null=False)
+    user_card_id = models.ForeignKey('UserCard', on_delete=models.CASCADE, null=False)
+
+    class Meta:
+        unique_together = ('user_card_id', 'decks_id')
 
     def __str__(self):
         """String representation of the Model object"""
@@ -81,9 +85,8 @@ class TradeResponse(models.Model):
 
 
 class TradeRequest(models.Model):
-    """Model for: the trade request"""
+    """Model for: """
     trade_request_date = models.DateTimeField(auto_now_add=True, null=True)
-#    trade_request_date = models.(default=datetime.datetime.strftime("%Y-%m-%d %H:%M:%S"))
     trade_request_id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                                         help_text='Unique ID for this trade request')
     playerRequesting = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
@@ -110,6 +113,9 @@ class OfferedCard(models.Model):
     trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.CASCADE, null=False)
     user_card_id = models.ForeignKey('UserCard', on_delete=models.RESTRICT, null=False)
 
+    class Meta:
+        unique_together = ('user_card_id', 'trade_request_id')
+
     def __str__(self):
         return f'{self.user_card_id.card_id.card_title}'
 
@@ -123,6 +129,9 @@ class RequestedCard(models.Model):
     )
     card_id = models.ForeignKey('Card', on_delete=models.RESTRICT, null=False)
     trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.CASCADE, null=True, default=None)
+
+    class Meta:
+        unique_together = ('card_id', 'trade_request_id')
 
     def __str__(self):
         return f'{self.card_id.card_title}'

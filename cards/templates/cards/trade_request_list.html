@@ -9,6 +9,7 @@
                     <th scope="col">Date</th>
                     <th scope="col">Requested Cards</th>
                     <th scope="col">Offered Cards</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +29,13 @@
                             {% empty %}
                                 None
                             {% endfor %}
-                        </tr>
+                        </td>
+                        <td>
+                            {% if tradeRequest.playerRequesting != user %}
+                                <a href="{% url 'accept_trade_request' pk=tradeRequest.trade_request_id %}" class='btn btn-info'>Accept</a>
+                            {% endif %}
+                        </td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
