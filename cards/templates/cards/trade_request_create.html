@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Create Trade Request</h1>
-  <form method="post" action="{% url 'my_trade_requests' %}">
+  <form method="post" action="{% url 'trade_request_create' %}">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Create Trade Request</button>
