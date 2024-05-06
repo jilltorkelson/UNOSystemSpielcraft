@@ -113,7 +113,7 @@ def accept_trade_request_view(request, pk):
             else:
                 UserCard.objects.create(player=request.user, card_id=offered_card.user_card_id.card_id,
                                         user_card_quantity=offered_card.offered_card_quantity)
-            if offered_card.offered_card_quantity == offered_card.user_card_id.quantity:
+            if offered_card.offered_card_quantity == offered_card.user_card_id.user_card_quantity:
                 offered_card.user_card_id.delete()
             else:
                 (UserCard.objects.filter(pk=offered_card.user_card_id)
@@ -127,7 +127,12 @@ def accept_trade_request_view(request, pk):
             else:
                 UserCard.objects.create(player=trade_request.playerRequesting, card_id=requested_card.card_id,
                                         user_card_quantity=requested_card.requested_card_quantity)
-            # TODO: Remove Cards from accepting player
+            card_to_remove = UserCard.objects.filter(player=request.user, card_id=requested_card.card_id).first()
+            if card_to_remove.user_card_quantity == requested_card.requested_card_quantity:
+                card_to_remove.delete()
+            else:
+                (UserCard.objects.filter(pk=card_to_remove.user_card_id)
+                 .update(user_card_quantity=card_to_remove.user_card_quantity - requested_card.requested_card_quantity))
         TradeResponse.objects.create(trade_response_date=datetime.now(), trade_request_id=trade_request,
                                      playerResponding=request.user)
         TradeRequest.objects.filter(pk=pk).update(status='f')
