@@ -116,6 +116,7 @@ def accept_trade_request_view(request, pk):
             if offered_card.offered_card_quantity == offered_card.user_card_id.user_card_quantity:
                 offered_card.user_card_id.delete()
             else:
+                # TODO: Handle updating deck cards if they're using more cards than they have after user card change
                 (UserCard.objects.filter(pk=offered_card.user_card_id)
                  .update(user_card_quantity=offered_card.user_card_quantity - offered_card.offered_card_quantity))
         for requested_card in trade_request.requestedcard_set.all():
@@ -131,6 +132,7 @@ def accept_trade_request_view(request, pk):
             if card_to_remove.user_card_quantity == requested_card.requested_card_quantity:
                 card_to_remove.delete()
             else:
+                # TODO: Handle updating deck cards if they're using more cards than they have after user card change
                 (UserCard.objects.filter(pk=card_to_remove.user_card_id)
                  .update(user_card_quantity=card_to_remove.user_card_quantity - requested_card.requested_card_quantity))
         TradeResponse.objects.create(trade_response_date=datetime.now(), trade_request_id=trade_request,
