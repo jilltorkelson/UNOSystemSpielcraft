@@ -7,6 +7,7 @@ from django.views.generic import ListView
 from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards, TradeResponse
 from .forms import TradeRequestForm, DeckForm
 from django.contrib import messages
+from django.db import transaction
 
 
 def index(request):
@@ -101,6 +102,7 @@ def deck_create_view(request):
     return render(request, 'cards/deck_create.html', {'form': form})
 
 
+@transaction.atomic
 def accept_trade_request_view(request, pk):
     trade_request = TradeRequest.objects.get(pk=pk)
     try:
