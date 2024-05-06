@@ -113,12 +113,13 @@ def accept_trade_request_view(request, pk):
             else:
                 UserCard.objects.create(player=request.user, card_id=offered_card.user_card_id.card_id,
                                         user_card_quantity=offered_card.offered_card_quantity)
-            if offered_card.offered_card_quantity == offered_card.user_card_id.user_card_quantity:
+            if offered_card.offered_card_quantity >= offered_card.user_card_id.user_card_quantity:
                 offered_card.user_card_id.delete()
             else:
+                quantity_difference = offered_card.user_card_quantity - offered_card.offered_card_quantity
                 # TODO: Handle updating deck cards if they're using more cards than they have after user card change
                 (UserCard.objects.filter(pk=offered_card.user_card_id)
-                 .update(user_card_quantity=offered_card.user_card_quantity - offered_card.offered_card_quantity))
+                 .update(user_card_quantity=quantity_difference))
         for requested_card in trade_request.requestedcard_set.all():
             current_card = (UserCard.objects.filter(card_id=requested_card.card_id)
                             .filter(player=trade_request.playerRequesting).first())
@@ -129,12 +130,13 @@ def accept_trade_request_view(request, pk):
                 UserCard.objects.create(player=trade_request.playerRequesting, card_id=requested_card.card_id,
                                         user_card_quantity=requested_card.requested_card_quantity)
             card_to_remove = UserCard.objects.filter(player=request.user, card_id=requested_card.card_id).first()
-            if card_to_remove.user_card_quantity == requested_card.requested_card_quantity:
+            if requested_card.requested_card_quantity >= card_to_remove.user_card_quantity:
                 card_to_remove.delete()
             else:
+                quantity_difference = card_to_remove.user_card_quantity - requested_card.requested_card_quantity
                 # TODO: Handle updating deck cards if they're using more cards than they have after user card change
                 (UserCard.objects.filter(pk=card_to_remove.user_card_id)
-                 .update(user_card_quantity=card_to_remove.user_card_quantity - requested_card.requested_card_quantity))
+                 .update(user_card_quantity=quantity_difference))
         TradeResponse.objects.create(trade_response_date=datetime.now(), trade_request_id=trade_request,
                                      playerResponding=request.user)
         TradeRequest.objects.filter(pk=pk).update(status='f')
