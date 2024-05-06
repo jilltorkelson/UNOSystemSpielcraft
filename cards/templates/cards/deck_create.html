@@ -2,4 +2,9 @@
 
 {% block content %}
     <h1>Create Deck</h1>
+    <form method="post" action="{% url 'deck_create' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Deck</button>
+    </form>
 {% endblock %}

@@ -5,7 +5,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards, TradeResponse
-from .forms import UserCardForm
+from .forms import TradeRequestForm, DeckForm
 from django.contrib import messages
 
 
@@ -68,7 +68,7 @@ class TradeRequestListView(LoginRequiredMixin, View):
 def trade_request_create_view(request):
     """View function to handle creation of a new trade request"""
     if request.method == 'POST':
-        form = UserCardForm(request.POST)
+        form = TradeRequestForm(request.POST)
         if form.is_valid():
             offered_cards = form.cleaned_data['offered_cards']
             requested_cards = form.cleaned_data['requested_cards']
@@ -81,7 +81,7 @@ def trade_request_create_view(request):
                 RequestedCard.objects.create(trade_request_id=new_trade_request, card_id=card)
             return redirect('trade_request_list')
     else:
-        form = UserCardForm()
+        form = TradeRequestForm()
 
     return render(request, 'cards/trade_request_create.html', {'form': form})
 
@@ -89,15 +89,15 @@ def trade_request_create_view(request):
 def deck_create_view(request):
     """View function to handle creation of a new deck"""
     if request.method == 'POST':
-        form = 1  # DeckForm(request.POST)
+        form = DeckForm(request.POST)
         if form.is_valid():
             deck_cards = form.cleaned_data['deck_cards']
-            new_deck = Decks.objects.create(player=request.user, title=form.cleaned_data['title'])
+            new_deck = Decks.objects.create(player=request.user, decks_title=form.cleaned_data['title'])
             for card in deck_cards:
-                DeckCards.objects.create(decks_id=new_deck.decks_id, user_card_id=card, deck_cards_quantity=1)
+                DeckCards.objects.create(decks_id=new_deck, user_card_id=card, deck_cards_quantity=1)
             return redirect('my_decks')
     else:
-        form = 1  # DeckForm()
+        form = DeckForm()
     return render(request, 'cards/deck_create.html', {'form': form})
 
 
@@ -127,6 +127,7 @@ def accept_trade_request_view(request, pk):
             else:
                 UserCard.objects.create(player=trade_request.playerRequesting, card_id=requested_card.card_id,
                                         user_card_quantity=requested_card.requested_card_quantity)
+            # TODO: Remove Cards from accepting player
         TradeResponse.objects.create(trade_response_date=datetime.now(), trade_request_id=trade_request,
                                      playerResponding=request.user)
         TradeRequest.objects.filter(pk=pk).update(status='f')
