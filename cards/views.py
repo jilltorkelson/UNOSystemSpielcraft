@@ -116,10 +116,7 @@ def accept_trade_request_view(request, pk):
             if offered_card.offered_card_quantity >= offered_card.user_card_id.user_card_quantity:
                 offered_card.user_card_id.delete()
             else:
-                quantity_difference = offered_card.user_card_quantity - offered_card.offered_card_quantity
-                # TODO: Handle updating deck cards if they're using more cards than they have after user card change
-                (UserCard.objects.filter(pk=offered_card.user_card_id)
-                 .update(user_card_quantity=quantity_difference))
+                update_card_counts(offered_card.user_card_id, offered_card.offered_card_quantity)
         for requested_card in trade_request.requestedcard_set.all():
             current_card = (UserCard.objects.filter(card_id=requested_card.card_id)
                             .filter(player=trade_request.playerRequesting).first())
@@ -133,10 +130,7 @@ def accept_trade_request_view(request, pk):
             if requested_card.requested_card_quantity >= card_to_remove.user_card_quantity:
                 card_to_remove.delete()
             else:
-                quantity_difference = card_to_remove.user_card_quantity - requested_card.requested_card_quantity
-                # TODO: Handle updating deck cards if they're using more cards than they have after user card change
-                (UserCard.objects.filter(pk=card_to_remove.user_card_id)
-                 .update(user_card_quantity=quantity_difference))
+                update_card_counts(card_to_remove, requested_card.requested_card_quantity)
         TradeResponse.objects.create(trade_response_date=datetime.now(), trade_request_id=trade_request,
                                      playerResponding=request.user)
         TradeRequest.objects.filter(pk=pk).update(status='f')
@@ -145,3 +139,15 @@ def accept_trade_request_view(request, pk):
         messages.error(request, 'trade request failed')
         return redirect('trade_request_list')
     return redirect('my_cards')
+
+
+def update_card_counts(user_card_id, quantity):
+    quantity_difference = user_card_id.user_card_quantity - quantity
+    deck_cards = DeckCards.objects.filter(user_card_id=user_card_id.user_card_id)
+    for deck_card in deck_cards:
+        if deck_card.deck_cards_quantity > quantity_difference:
+            (DeckCards.objects.filter(deck_cards_id=deck_card.deck_cards_id)
+             .update(deck_cards_quantity=quantity_difference))
+    (UserCard.objects.filter(pk=user_card_id.user_card_id)
+     .update(user_card_quantity=quantity_difference))
+
