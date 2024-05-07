@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
 from django.core.validators import MinValueValidator  # Import MinValueValidator for validation
@@ -28,6 +26,7 @@ class Card(models.Model):
     def __str__(self):
         """String representation of the Model object"""
         return f'{self.card_title}'
+
 
 class UserCard(models.Model):
     """Model for: Cards belonging to user"""
@@ -113,7 +112,7 @@ class OfferedCard(models.Model):
                                        help_text='Unique ID for this Offered Card')
     offered_card_quantity = models.PositiveIntegerField(null=False)
     trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.CASCADE, null=False)
-    user_card_id = models.ForeignKey('UserCard', on_delete=models.RESTRICT, null=False)
+    user_card_id = models.ForeignKey('UserCard', on_delete=models.CASCADE, null=False)
 
     class Meta:
         unique_together = ('user_card_id', 'trade_request_id')
