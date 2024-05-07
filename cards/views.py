@@ -66,27 +66,6 @@ class TradeRequestListView(LoginRequiredMixin, View):
         return render(request, 'cards/trade_request_list.html', {'trade_requests': trade_requests})
 
 
-#def trade_request_create_view(request):
-#    """View function to handle creation of a new trade request"""
-#    if request.method == 'POST':
-#        form = TradeRequestForm(request.POST)
-#        if form.is_valid():
-#            offered_cards = form.cleaned_data['offered_cards']
-#            requested_cards = form.cleaned_data['requested_cards']
-#            new_trade_request = TradeRequest.objects.create(
-#                playerRequesting=request.user, trade_request_date=datetime.now())
-#            for card in offered_cards:
-#                OfferedCard.objects.create(trade_request_id=new_trade_request, user_card_id=card,
-#                                           offered_card_quantity=1)
-#            for card in requested_cards:
-#                RequestedCard.objects.create(trade_request_id=new_trade_request, card_id=card)
-#            return redirect('trade_request_list')
-#    else:
-#        form = TradeRequestForm(request.user)
-#
-#    return render(request, 'cards/trade_request_create.html', {'form': form})
-
-
 class TradeRequestCreateView(LoginRequiredMixin, CreateView):
     model = TradeRequest
     template_name = 'cards/trade_request_create.html'
