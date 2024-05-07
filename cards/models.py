@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
 from django.core.validators import MinValueValidator  # Import MinValueValidator for validation
@@ -28,6 +26,7 @@ class Card(models.Model):
     def __str__(self):
         """String representation of the Model object"""
         return f'{self.card_title}'
+
 
 class UserCard(models.Model):
     """Model for: Cards belonging to user"""

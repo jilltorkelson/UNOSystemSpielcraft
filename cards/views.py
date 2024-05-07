@@ -3,7 +3,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
+from django.views.generic import ListView, CreateView
 from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards, TradeResponse
 from .forms import TradeRequestForm, DeckForm
 from django.contrib import messages
@@ -87,19 +87,26 @@ def trade_request_create_view(request):
     return render(request, 'cards/trade_request_create.html', {'form': form})
 
 
-def deck_create_view(request):
-    """View function to handle creation of a new deck"""
-    if request.method == 'POST':
-        form = DeckForm(request.POST)
-        if form.is_valid():
-            deck_cards = form.cleaned_data['deck_cards']
-            new_deck = Decks.objects.create(player=request.user, decks_title=form.cleaned_data['title'])
-            for card in deck_cards:
-                DeckCards.objects.create(decks_id=new_deck, user_card_id=card, deck_cards_quantity=1)
-            return redirect('my_decks')
-    else:
-        form = DeckForm(request.user)
-    return render(request, 'cards/deck_create.html', {'form': form})
+class DeckCreateView(LoginRequiredMixin, CreateView):
+    model = Decks
+    template_name = 'cards/deck_create.html'
+    form_class = DeckForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_cards'] = UserCard.objects.filter(player=self.request.user)
+        return context
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        form = request.POST
+        deck = Decks.objects.create(decks_title=form['decks_title'], player=self.request.user)
+        user_cards = UserCard.objects.filter(player=self.request.user)
+        for user_card in user_cards:
+            form_id = 'id_' + user_card.user_card_id.__str__()
+            if form[form_id] and int(form[form_id]) > 0:
+                DeckCards.objects.create(deck_cards_quantity=form[form_id], decks_id=deck, user_card_id=user_card)
+        return redirect('my_decks')
 
 
 @transaction.atomic

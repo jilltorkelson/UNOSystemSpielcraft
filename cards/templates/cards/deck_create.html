@@ -5,6 +5,15 @@
     <form method="post" action="{% url 'deck_create' %}">
         {% csrf_token %}
         {{ form.as_p }}
+        <div>
+            <h4>Cards</h4>
+            {% for user_card in user_cards %}
+                <div class="form-group">
+                    <label for="id_{{ user_card.user_card_id }}">{{ user_card }} ({{ user_card.user_card_quantity }})</label>
+                    <input min="0" max="{{ user_card.user_card_quantity }}" type="number" name="id_{{ user_card.user_card_id }}" id="id_{{ user_card.user_card_id }}" required>
+                </div>
+            {% endfor %}
+        </div>
         <button type="submit">Create Deck</button>
     </form>
 {% endblock %}
