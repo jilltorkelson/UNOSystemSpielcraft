@@ -82,7 +82,7 @@ def trade_request_create_view(request):
                 RequestedCard.objects.create(trade_request_id=new_trade_request, card_id=card)
             return redirect('trade_request_list')
     else:
-        form = TradeRequestForm()
+        form = TradeRequestForm(request.user)
 
     return render(request, 'cards/trade_request_create.html', {'form': form})
 
@@ -98,7 +98,7 @@ def deck_create_view(request):
                 DeckCards.objects.create(decks_id=new_deck, user_card_id=card, deck_cards_quantity=1)
             return redirect('my_decks')
     else:
-        form = DeckForm()
+        form = DeckForm(request.user)
     return render(request, 'cards/deck_create.html', {'form': form})
 
 
