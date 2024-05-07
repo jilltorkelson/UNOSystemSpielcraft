@@ -10,7 +10,7 @@ urlpatterns = [
     path('my_cards/', views.MyCardsListView.as_view(), name='my_cards'),
     path('my_decks/', views.MyDecksListView.as_view(), name='my_decks'),
     path('card_detail/<int:pk>/', views.CardDetailView.as_view(), name='card_detail'),
-    path('trade_request_create/', views.trade_request_create_view, name='trade_request_create'),
+    path('trade_request_create/', views.TradeRequestCreateView.as_view(), name='trade_request_create'),
     path('deck_create/', views.DeckCreateView.as_view(), name='deck_create'),
     path('accept_trade_request/<uuid:pk>', views.accept_trade_request_view, name='accept_trade_request')
 ]

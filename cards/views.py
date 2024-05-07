@@ -5,7 +5,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView
 from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards, TradeResponse
-from .forms import TradeRequestForm, DeckForm
+from .forms import DeckForm
 from django.contrib import messages
 from django.db import transaction
 
@@ -66,25 +66,55 @@ class TradeRequestListView(LoginRequiredMixin, View):
         return render(request, 'cards/trade_request_list.html', {'trade_requests': trade_requests})
 
 
-def trade_request_create_view(request):
-    """View function to handle creation of a new trade request"""
-    if request.method == 'POST':
-        form = TradeRequestForm(request.POST)
-        if form.is_valid():
-            offered_cards = form.cleaned_data['offered_cards']
-            requested_cards = form.cleaned_data['requested_cards']
-            new_trade_request = TradeRequest.objects.create(
-                playerRequesting=request.user, trade_request_date=datetime.now())
-            for card in offered_cards:
-                OfferedCard.objects.create(trade_request_id=new_trade_request, user_card_id=card,
-                                           offered_card_quantity=1)
-            for card in requested_cards:
-                RequestedCard.objects.create(trade_request_id=new_trade_request, card_id=card)
-            return redirect('trade_request_list')
-    else:
-        form = TradeRequestForm(request.user)
+#def trade_request_create_view(request):
+#    """View function to handle creation of a new trade request"""
+#    if request.method == 'POST':
+#        form = TradeRequestForm(request.POST)
+#        if form.is_valid():
+#            offered_cards = form.cleaned_data['offered_cards']
+#            requested_cards = form.cleaned_data['requested_cards']
+#            new_trade_request = TradeRequest.objects.create(
+#                playerRequesting=request.user, trade_request_date=datetime.now())
+#            for card in offered_cards:
+#                OfferedCard.objects.create(trade_request_id=new_trade_request, user_card_id=card,
+#                                           offered_card_quantity=1)
+#            for card in requested_cards:
+#                RequestedCard.objects.create(trade_request_id=new_trade_request, card_id=card)
+#            return redirect('trade_request_list')
+#    else:
+#        form = TradeRequestForm(request.user)
+#
+#    return render(request, 'cards/trade_request_create.html', {'form': form})
 
-    return render(request, 'cards/trade_request_create.html', {'form': form})
+
+class TradeRequestCreateView(LoginRequiredMixin, CreateView):
+    model = TradeRequest
+    template_name = 'cards/trade_request_create.html'
+    fields = []
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_cards'] = UserCard.objects.filter(player=self.request.user)
+        context['cards'] = Card.objects.all()
+        return context
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        form = request.POST
+        trade_request = TradeRequest.objects.create(playerRequesting=self.request.user)
+        user_cards = UserCard.objects.filter(player=self.request.user)
+        cards = Card.objects.all()
+        for user_card in user_cards:
+            form_id = 'id_' + user_card.user_card_id.__str__()
+            if form[form_id] and int(form[form_id]) > 0:
+                OfferedCard.objects.create(offered_card_quantity=form[form_id], trade_request_id=trade_request,
+                                           user_card_id=user_card)
+        for card in cards:
+            form_id = 'id_' + card.card_id.__str__()
+            if form[form_id] and int(form[form_id]) > 0:
+                RequestedCard.objects.create(requested_card_quantity=form[form_id], card_id=card,
+                                             trade_request_id=trade_request)
+        return redirect('trade_request_list')
 
 
 class DeckCreateView(LoginRequiredMixin, CreateView):
