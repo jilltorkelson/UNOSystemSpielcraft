@@ -63,7 +63,16 @@ class TradeRequestListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         """Handle GET request to retrieve and display trade requests"""
         trade_requests = TradeRequest.objects.filter(status='p')
-        return render(request, 'cards/trade_request_list.html', {'trade_requests': trade_requests})
+        user_cards = UserCard.objects.filter(player=self.request.user)
+        available_trades = []
+        for trade_request in trade_requests:
+            for requested_card in trade_request.requestedcard_set.all():
+                if True in (card.card_id == requested_card.card_id and
+                            card.user_card_quantity >= requested_card.requested_card_quantity
+                            for card in user_cards):
+                    available_trades.append(trade_request.trade_request_id)
+        return render(request, 'cards/trade_request_list.html',
+                      {'trade_requests': trade_requests, 'available_trades': available_trades})
 
 
 class TradeRequestCreateView(LoginRequiredMixin, CreateView):

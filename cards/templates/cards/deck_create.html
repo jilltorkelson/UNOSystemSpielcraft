@@ -3,9 +3,9 @@
 {% block content %}
     <h1>Create Deck</h1>
     <form method="post" action="{% url 'deck_create' %}">
+    <div class="form-block">
         {% csrf_token %}
         {{ form.as_p }}
-        <div>
             <h4>Cards</h4>
             {% for user_card in user_cards %}
                 <div class="form-group">
@@ -13,7 +13,7 @@
                     <input min="0" max="{{ user_card.user_card_quantity }}" type="number" name="id_{{ user_card.user_card_id }}" id="id_{{ user_card.user_card_id }}">
                 </div>
             {% endfor %}
-        </div>
         <button type="submit">Create Deck</button>
+    </div>
     </form>
 {% endblock %}

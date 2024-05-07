@@ -3,9 +3,9 @@
 {% block content %}
   <h1>Create Trade Request</h1>
   <form method="post" action="{% url 'trade_request_create' %}">
+    <div class="form-block">
     {% csrf_token %}
     {{ form.as_p }}
-    <div>
         <h4>Offering Cards</h4>
         {% for user_card in user_cards %}
             <div class="form-group">
@@ -13,8 +13,6 @@
                 <input min="0" max="{{ user_card.user_card_quantity }}" type="number" name="id_{{ user_card.user_card_id }}" id="id_{{ user_card.user_card_id }}">
             </div>
         {% endfor %}
-    </div>
-    <div>
         <h4>Requesting Cards</h4>
         {% for card in cards %}
             <div class="form-group">
@@ -22,7 +20,7 @@
                 <input min="0" type="number" name="id_{{ card.card_id }}" id="id_{{ card.card_id }}">
             </div>
         {% endfor %}
+        <button type="submit">Create Trade Request</button>
     </div>
-    <button type="submit">Create Trade Request</button>
   </form>
 {% endblock %}
