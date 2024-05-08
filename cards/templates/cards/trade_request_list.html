@@ -31,7 +31,8 @@
                             {% endfor %}
                         </td>
                         <td>
-                            {% if tradeRequest.playerRequesting != user %}
+                            {% if tradeRequest.playerRequesting != user and tradeRequest.trade_request_id in available_trades %}
+
                                 <a href="{% url 'accept_trade_request' pk=tradeRequest.trade_request_id %}" class='btn btn-info'>Accept</a>
                             {% endif %}
                         </td>
