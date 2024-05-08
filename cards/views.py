@@ -66,11 +66,17 @@ class TradeRequestListView(LoginRequiredMixin, View):
         user_cards = UserCard.objects.filter(player=self.request.user)
         available_trades = []
         for trade_request in trade_requests:
+            all_found = True
             for requested_card in trade_request.requestedcard_set.all():
-                if True in (card.card_id == requested_card.card_id and
-                            card.user_card_quantity >= requested_card.requested_card_quantity
-                            for card in user_cards):
-                    available_trades.append(trade_request.trade_request_id)
+                found_one = False
+                for user_card in user_cards:
+                    if (user_card.card_id == requested_card.card_id
+                            and user_card.user_card_quantity >= requested_card.requested_card_quantity):
+                        found_one = True
+                if not found_one:
+                    all_found = False
+            if all_found:
+                available_trades.append(trade_request.trade_request_id)
         return render(request, 'cards/trade_request_list.html',
                       {'trade_requests': trade_requests, 'available_trades': available_trades})
 
@@ -176,4 +182,3 @@ def update_card_counts(user_card_id, quantity):
              .update(deck_cards_quantity=quantity_difference))
     (UserCard.objects.filter(pk=user_card_id.user_card_id)
      .update(user_card_quantity=quantity_difference))
-
