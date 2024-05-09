@@ -25,7 +25,7 @@
                         </td>
                         <td>
                             {% for offered_card in tradeRequest.offeredcard_set.all %}
-                                {{ offered_card.user_card_id.card_id.card_title }} ({{ offered_card.offered_card_quantity }})<br>
+                                {{ offered_card.card_id.card_title }} ({{ offered_card.offered_card_quantity }})<br>
                             {% empty %}
                                 None
                             {% endfor %}
