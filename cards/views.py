@@ -138,6 +138,12 @@ class DeckCreateView(LoginRequiredMixin, CreateView):
         return redirect('my_decks')
 
 
+def delete_deck_view(request, pk):
+    deck = Decks.objects.get(pk=pk)
+    deck.delete()
+    return redirect('my_decks')
+
+
 @transaction.atomic
 def accept_trade_request_view(request, pk):
     trade_request = TradeRequest.objects.get(pk=pk)
