@@ -66,11 +66,17 @@ class TradeRequestListView(LoginRequiredMixin, View):
         user_cards = UserCard.objects.filter(player=self.request.user)
         available_trades = []
         for trade_request in trade_requests:
+            all_found = True
             for requested_card in trade_request.requestedcard_set.all():
-                if True in (card.card_id == requested_card.card_id and
-                            card.user_card_quantity >= requested_card.requested_card_quantity
-                            for card in user_cards):
-                    available_trades.append(trade_request.trade_request_id)
+                found_one = False
+                for user_card in user_cards:
+                    if (user_card.card_id == requested_card.card_id
+                            and user_card.user_card_quantity >= requested_card.requested_card_quantity):
+                        found_one = True
+                if not found_one:
+                    all_found = False
+            if all_found:
+                available_trades.append(trade_request.trade_request_id)
         return render(request, 'cards/trade_request_list.html',
                       {'trade_requests': trade_requests, 'available_trades': available_trades})
 
@@ -95,8 +101,13 @@ class TradeRequestCreateView(LoginRequiredMixin, CreateView):
         for user_card in user_cards:
             form_id = 'id_' + user_card.user_card_id.__str__()
             if form[form_id] and int(form[form_id]) > 0:
-                OfferedCard.objects.create(offered_card_quantity=form[form_id], trade_request_id=trade_request,
-                                           user_card_id=user_card)
+                quantity = int(form[form_id])
+                OfferedCard.objects.create(offered_card_quantity=quantity, trade_request_id=trade_request,
+                                           card_id=user_card.card_id)
+                if user_card.user_card_quantity == quantity:
+                    UserCard.objects.filter(pk=user_card.pk).delete()
+                else:
+                    update_card_counts(user_card, quantity)
         for card in cards:
             form_id = 'id_' + card.card_id.__str__()
             if form[form_id] and int(form[form_id]) > 0:
@@ -132,27 +143,13 @@ def accept_trade_request_view(request, pk):
     trade_request = TradeRequest.objects.get(pk=pk)
     try:
         for offered_card in trade_request.offeredcard_set.all():
-            current_card = (UserCard.objects.filter(card_id=offered_card.user_card_id.card_id)
-                            .filter(player=request.user).first())
-            if current_card:
-                (UserCard.objects.filter(pk=current_card.user_card_id)
-                 .update(user_card_quantity=current_card.user_card_quantity + offered_card.offered_card_quantity))
-            else:
-                UserCard.objects.create(player=request.user, card_id=offered_card.user_card_id.card_id,
-                                        user_card_quantity=offered_card.offered_card_quantity)
-            if offered_card.offered_card_quantity >= offered_card.user_card_id.user_card_quantity:
-                offered_card.user_card_id.delete()
-            else:
-                update_card_counts(offered_card.user_card_id, offered_card.offered_card_quantity)
+            handle_new_cards(offered_card.card_id, request.user,
+                             offered_card.offered_card_quantity)
+
         for requested_card in trade_request.requestedcard_set.all():
-            current_card = (UserCard.objects.filter(card_id=requested_card.card_id)
-                            .filter(player=trade_request.playerRequesting).first())
-            if current_card:
-                (UserCard.objects.filter(pk=current_card.user_card_id)
-                 .update(user_card_quantity=current_card.user_card_quantity + requested_card.requested_card_quantity))
-            else:
-                UserCard.objects.create(player=trade_request.playerRequesting, card_id=requested_card.card_id,
-                                        user_card_quantity=requested_card.requested_card_quantity)
+            handle_new_cards(requested_card.card_id, trade_request.playerRequesting,
+                             requested_card.requested_card_quantity)
+
             card_to_remove = UserCard.objects.filter(player=request.user, card_id=requested_card.card_id).first()
             if requested_card.requested_card_quantity >= card_to_remove.user_card_quantity:
                 card_to_remove.delete()
@@ -177,3 +174,12 @@ def update_card_counts(user_card_id, quantity):
     (UserCard.objects.filter(pk=user_card_id.user_card_id)
      .update(user_card_quantity=quantity_difference))
 
+
+def handle_new_cards(card_id, user, quantity):
+    current_card = (UserCard.objects.filter(card_id=card_id)
+                    .filter(player=user).first())
+    if current_card:
+        (UserCard.objects.filter(pk=current_card.user_card_id)
+         .update(user_card_quantity=current_card.user_card_quantity + quantity))
+    else:
+        UserCard.objects.create(player=user, card_id=card_id, user_card_quantity=quantity)

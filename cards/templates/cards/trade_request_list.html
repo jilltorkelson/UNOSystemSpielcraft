@@ -17,15 +17,15 @@
                     <tr>
                         <td>{{ tradeRequest.trade_request_date }}</td>
                         <td>
-                            {% for offered_card in tradeRequest.offeredcard_set.all %}
-                                {{ offered_card.user_card_id.card_id.card_title }} ({{ offered_card.offered_card_quantity }})<br>
+                            {% for requested_card in tradeRequest.requestedcard_set.all %}
+                                {{ requested_card.card_id.card_title }} ({{ requested_card.requested_card_quantity }})<br>
                             {% empty %}
                                 None
                             {% endfor %}
                         </td>
                         <td>
-                            {% for requested_card in tradeRequest.requestedcard_set.all %}
-                                {{ requested_card.card_id.card_title }} ({{ requested_card.requested_card_quantity }})<br>
+                            {% for offered_card in tradeRequest.offeredcard_set.all %}
+                                {{ offered_card.card_id.card_title }} ({{ offered_card.offered_card_quantity }})<br>
                             {% empty %}
                                 None
                             {% endfor %}
@@ -34,6 +34,12 @@
                             {% if tradeRequest.playerRequesting != user and tradeRequest.trade_request_id in available_trades %}
 
                                 <a href="{% url 'accept_trade_request' pk=tradeRequest.trade_request_id %}" class='btn btn-info'>Accept</a>
+                            {% else %}
+                                {% if tradeRequest.playerRequesting == user %}
+                                    YOUR REQUEST
+                                {% else %}
+                                    INSUFFICIENT CARDS
+                                {% endif %}    
                             {% endif %}
                         </td>
                     </tr>
