@@ -112,13 +112,13 @@ class OfferedCard(models.Model):
                                        help_text='Unique ID for this Offered Card')
     offered_card_quantity = models.PositiveIntegerField(null=False)
     trade_request_id = models.ForeignKey('TradeRequest', on_delete=models.CASCADE, null=False)
-    user_card_id = models.ForeignKey('UserCard', on_delete=models.CASCADE, null=False)
+    card_id = models.ForeignKey('Card', on_delete=models.CASCADE, null=False)
 
     class Meta:
-        unique_together = ('user_card_id', 'trade_request_id')
+        unique_together = ('card_id', 'trade_request_id')
 
     def __str__(self):
-        return f'{self.user_card_id.card_id.card_title}'
+        return f'{self.card_id.card_title}'
 
 
 class RequestedCard(models.Model):
