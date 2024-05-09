@@ -170,7 +170,6 @@ def accept_trade_request_view(request, pk):
         return redirect('trade_request_list')
     return redirect('my_cards')
 
-
 def update_card_counts(user_card_id, quantity):
     quantity_difference = user_card_id.user_card_quantity - quantity
     deck_cards = DeckCards.objects.filter(user_card_id=user_card_id.user_card_id)
