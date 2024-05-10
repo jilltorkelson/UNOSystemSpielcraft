@@ -5,7 +5,6 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView
 from .models import Card, UserCard, Decks, TradeRequest, OfferedCard, RequestedCard, DeckCards, TradeResponse
-from .forms import DeckForm
 from django.contrib import messages
 from django.db import transaction
 
@@ -119,16 +118,32 @@ class TradeRequestCreateView(LoginRequiredMixin, CreateView):
 class DeckCreateView(LoginRequiredMixin, CreateView):
     model = Decks
     template_name = 'cards/deck_create.html'
-    form_class = DeckForm
+    fields = []
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['user_cards'] = UserCard.objects.filter(player=self.request.user)
+        user_cards = UserCard.objects.filter(player=self.request.user)
+        return_cards = []
+        if 'pk' in self.kwargs:
+            deck = Decks.objects.filter(pk=self.kwargs['pk']).first()
+            context['id_deck_id'] = deck
+            for user_card in user_cards:
+                deck_card = deck.deckcards_set.get(user_card_id=user_card.user_card_id)
+                if deck_card:
+                    return_cards.append((user_card, deck_card.deck_cards_quantity))
+                else:
+                    return_cards.append((user_card, 0))
+        else:
+            for user_card in user_cards:
+                return_cards.append((user_card, 0))
+        context['user_cards'] = return_cards
         return context
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         form = request.POST
+        if form['id_deck_id']:
+            Decks.objects.get(pk=form['id_deck_id']).delete()
         deck = Decks.objects.create(decks_title=form['decks_title'], player=self.request.user)
         user_cards = UserCard.objects.filter(player=self.request.user)
         for user_card in user_cards:

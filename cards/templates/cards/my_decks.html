@@ -26,6 +26,7 @@
                             {% endfor %}
                         </td>
                         <td>
+                            <a href="{% url 'deck_create' pk=deck.decks_id %}" class='btn btn-info'>Edit</a>
                             <a href="{% url 'delete_deck' pk=deck.decks_id %}" class='btn btn-danger'>Delete</a>
                         </td>
                     </tr>
