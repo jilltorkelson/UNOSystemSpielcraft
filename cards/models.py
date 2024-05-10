@@ -117,9 +117,6 @@ class OfferedCard(models.Model):
     class Meta:
         unique_together = ('card_id', 'trade_request_id')
 
-    class Meta:
-        unique_together = ('user_card_id', 'trade_request_id')
-
     def __str__(self):
         return f'{self.card_id.card_title}'
 
