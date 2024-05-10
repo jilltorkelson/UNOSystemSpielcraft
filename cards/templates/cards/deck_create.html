@@ -14,8 +14,9 @@
         <h4>Cards</h4>
         {% for user_card in user_cards %}
             <div class="form-group">
-                <label for="id_{{ user_card.user_card_id }}">{{ user_card }} ({{ user_card.user_card_quantity }})</label>
-                <input min="0" max="{{ user_card.user_card_quantity }}" type="number" name="id_{{ user_card.user_card_id }}" id="id_{{ user_card.user_card_id }}">
+                <label for="id_{{ user_card.0.user_card_id }}">{{ user_card.0 }} ({{ user_card.0.user_card_quantity }})</label>
+                <input min="0" max="{{ user_card.0.user_card_quantity }}" type="number" name="id_{{ user_card.0.user_card_id }}"
+                       id="id_{{ user_card.0.user_card_id }}" value="{{ user_card.1 }}">
             </div>
         {% endfor %}
         <input type="hidden" name="id_deck_id" id="id_deck_id" value="{{ id_deck_id.decks_id }}" />
