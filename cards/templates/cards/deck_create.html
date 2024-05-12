@@ -20,7 +20,11 @@
             </div>
         {% endfor %}
         <input type="hidden" name="id_deck_id" id="id_deck_id" value="{{ id_deck_id.decks_id }}" />
+    {% if id_deck_id %}
+        <button type="submit">Save Changes</button>
+    {% else %}
         <button type="submit">Create Deck</button>
+    {% endif %}
     </div>
     </form>
 {% endblock %}
