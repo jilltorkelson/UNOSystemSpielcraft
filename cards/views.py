@@ -128,7 +128,7 @@ class DeckCreateView(LoginRequiredMixin, CreateView):
             deck = Decks.objects.filter(pk=self.kwargs['pk']).first()
             context['id_deck_id'] = deck
             for user_card in user_cards:
-                deck_card = deck.deckcards_set.get(user_card_id=user_card.user_card_id)
+                deck_card = deck.deckcards_set.filter(user_card_id=user_card.user_card_id).first()
                 if deck_card:
                     return_cards.append((user_card, deck_card.deck_cards_quantity))
                 else:
