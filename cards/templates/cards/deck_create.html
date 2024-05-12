@@ -10,7 +10,7 @@
     <div class="form-block">
         {% csrf_token %}
         <label for="decks_title">Title</label>
-        <input type="text" name="decks_title" id="decks_title" value="{{ id_deck_id.decks_title }}" />
+        <input type="text" name="decks_title" id="decks_title" value="{{ id_deck_id.decks_title }}" required />
         <h4>Cards</h4>
         {% for user_card in user_cards %}
             <div class="form-group">
