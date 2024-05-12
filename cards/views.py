@@ -146,10 +146,14 @@ class DeckCreateView(LoginRequiredMixin, CreateView):
             Decks.objects.get(pk=form['id_deck_id']).delete()
         deck = Decks.objects.create(decks_title=form['decks_title'], player=self.request.user)
         user_cards = UserCard.objects.filter(player=self.request.user)
+        cards_exist = False
         for user_card in user_cards:
             form_id = 'id_' + user_card.user_card_id.__str__()
             if form[form_id] and int(form[form_id]) > 0:
                 DeckCards.objects.create(deck_cards_quantity=form[form_id], decks_id=deck, user_card_id=user_card)
+                cards_exist = True
+        if not cards_exist:
+            deck.delete()
         return redirect('my_decks')
 
 
@@ -184,6 +188,7 @@ def accept_trade_request_view(request, pk):
         messages.error(request, 'trade request failed')
         return redirect('trade_request_list')
     return redirect('my_cards')
+
 
 def update_card_counts(user_card_id, quantity):
     quantity_difference = user_card_id.user_card_quantity - quantity
