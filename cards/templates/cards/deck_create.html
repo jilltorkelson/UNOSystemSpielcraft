@@ -1,5 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Create Deck</h1>
+    {% if id_deck_id %}
+        <h1>Edit Deck</h1>
+    {% else %}
+        <h1>Create Deck</h1>
+    {% endif %}
+    <form method="post" action="{% url 'deck_create' %}">
+    <div class="form-block">
+        {% csrf_token %}
+        <label for="decks_title">Title</label>
+        <input type="text" name="decks_title" id="decks_title" value="{{ id_deck_id.decks_title }}" required />
+        <h4>Cards</h4>
+        {% for user_card in user_cards %}
+            <div class="form-group">
+                <label for="id_{{ user_card.0.user_card_id }}">{{ user_card.0 }} ({{ user_card.0.user_card_quantity }})</label>
+                <input min="0" max="{{ user_card.0.user_card_quantity }}" type="number" name="id_{{ user_card.0.user_card_id }}"
+                       id="id_{{ user_card.0.user_card_id }}" value="{{ user_card.1 }}">
+            </div>
+        {% endfor %}
+        <input type="hidden" name="id_deck_id" id="id_deck_id" value="{{ id_deck_id.decks_id }}" />
+    {% if id_deck_id %}
+        <button type="submit">Save Changes</button>
+    {% else %}
+        <button type="submit">Create Deck</button>
+    {% endif %}
+    </div>
+    </form>
 {% endblock %}

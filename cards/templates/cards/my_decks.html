@@ -11,6 +11,7 @@
                 <tr>
                     <th scope="col">Deck Title</th>
                     <th scope="col">Cards</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,6 +24,10 @@
                             {% empty %}
                                 None
                             {% endfor %}
+                        </td>
+                        <td>
+                            <a href="{% url 'deck_create' pk=deck.decks_id %}" class='btn btn-info'>Edit</a>
+                            <a href="{% url 'delete_deck' pk=deck.decks_id %}" class='btn btn-danger'>Delete</a>
                         </td>
                     </tr>
                 {% endfor %}

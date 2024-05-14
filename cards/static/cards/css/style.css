@@ -82,6 +82,21 @@ h1 {
     background-color: #31353b;
 }
 
+.form-block{
+    background-color: white;
+    display: inline-block;
+    margin: 50px;
+    padding: 50px;
+    border-radius: 50px;
+}
+
+.form-block div{
+    text-align: right;
+}
+
+.form-block button{
+    margin-top: 20px;
+}
 
 .footer-container {
   width: 100%;
