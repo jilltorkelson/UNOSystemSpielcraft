@@ -7,18 +7,6 @@ html,body {
     overflow-x:hidden;
 }
 
-head {
-
-}
-
-
-body {
-
-}
-
-header {
-
-}
 
 h1 {
     font-family: "Algerian", fantasy, serif;
@@ -47,7 +35,7 @@ h1 {
     line-height: 90%;
     font-family: "Algerian", fantasy, serif;
     padding-right: 30px;
-    color: #4a963b;
+    color: rgb(179, 29, 61);
     background-color: black;
 }
 
@@ -116,19 +104,16 @@ h1 {
 
 .block-content .centered-logo p {
     position: absolute;
-    top: 10%;
+    top: 90%;
     left: 90%;
     transform: translate(-50%, -50%);
     text-decoration: none;
-    font-size: 40px;
+    font-size: 20px;
     font-family: "Algerian", fantasy, serif;
-    color: green;
-    background: rgb(0,0,0);
-    background: rgba(0,0,0,.5);
-    padding: 4px;
-    width: 20%;
+    color: rgb(179, 29, 61);
+    padding: 1px;
+    width: 10%;
 }
-
 
 .table {
     color: lightgrey;
@@ -187,18 +172,6 @@ h1 {
 .card-details {
     font-size: 30px;
     font-family: "Garamond", fantasy, serif;
-
-}
-
-.card-details h2{
-
-}
-
-.card-details p{
-
-}
-
-.deck-title {
 
 }
 
